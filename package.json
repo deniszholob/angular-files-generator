@@ -1,0 +1,144 @@
+{
+  "name": "angular-files-generator",
+  "displayName": "Angular Files Generator",
+  "description": "Generator for Angular Modules, Components, etc...",
+  "author": "Denis Zholob",
+  "publisher": "deniszholob",
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/deniszholob/angular-files-generator"
+  },
+  "bugs": {
+    "url": "https://github.com/deniszholob/angular-files-generator/issues"
+  },
+  "icon": "images/icon-96x96.png",
+  "version": "0.0.1",
+  "license": "GPL-3",
+  "engines": {
+    "node": ">=18.12.1",
+    "npm": ">=8.19.2",
+    "vscode": ">=1.74.0"
+  },
+  "keywords": [
+    "Angular 2",
+    "angular-cli",
+    "angular",
+    "TypeScript",
+    "Template",
+    "Schematic",
+    "Generator"
+  ],
+  "categories": [
+    "Other",
+    "Programming Languages",
+    "Snippets"
+  ],
+  "contributes": {
+    "menus": {
+      "explorer/context": [
+        {
+          "submenu": "ng-generate.generate",
+          "group": "navigation"
+        }
+      ],
+      "ng-generate.generate": [
+        {
+          "command": "angular-files-generator.generateModule",
+          "group": "navigation"
+        },
+        {
+          "command": "angular-files-generator.generateService",
+          "group": "navigation"
+        },
+        {
+          "command": "angular-files-generator.generateComponent",
+          "group": "navigation"
+        }
+      ]
+    },
+    "submenus": [
+      {
+        "id": "ng-generate.generate",
+        "label": "Angular Generator"
+      }
+    ],
+    "commands": [
+      {
+        "command": "angular-files-generator.generateModule",
+        "title": "Module Component"
+      },
+      {
+        "command": "angular-files-generator.generateService",
+        "title": "Service"
+      },
+      {
+        "command": "angular-files-generator.generateComponent",
+        "title": "Component"
+      }
+    ]
+  },
+  "activationEvents": [
+    "onCommand:angular-files-generator.generateModule",
+    "onCommand:angular-files-generator.generateService",
+    "onCommand:angular-files-generator.generateComponent"
+  ],
+  "main": "./out/extension.js",
+  "scripts": {
+    "i": "npm i",
+    "package": "npx vsce package",
+    "publish": "npx vsce publish",
+    "remove-output": "rimraf ./out ",
+    "template-copy": "copyfiles -f ./src/templates/**/*.mustache ./out/templates/",
+    "compile": "npm run pre-build && tsc -p ./",
+    "watch": "npm run pre-build && tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "format": "prettier --write --ignore-unknown  .",
+    "format:check": "prettier --check  --ignore-unknown .",
+    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
+    "esbuild": "npm run pre-build && npm run esbuild-base -- --minify",
+    "esbuild:dev": "npm run pre-build && npm run esbuild-base -- --sourcemap",
+    "esbuild-watch": "npm run pre-build && npm run esbuild-base -- --sourcemap --watch",
+    "vscode:prepublish": "npm run esbuild",
+    "pre-build": "npm run remove-output && npm run template-copy",
+    "pre-commit": "npx lint-staged"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx,js,jsx}": [
+      "eslint --fix"
+    ],
+    "**/*": [
+      "prettier --write --ignore-unknown"
+    ]
+  },
+  "dependencies": {
+    "@types/mustache": "4.2.2",
+    "@vscode/vsce": "2.16.0",
+    "copyfiles": "2.4.1",
+    "mustache": "4.2.0"
+  },
+  "devDependencies": {
+    "@types/glob": "8.0.0",
+    "@types/mocha": "10.0.1",
+    "@types/node": "16.x",
+    "@types/vscode": "1.74.0",
+    "@typescript-eslint/eslint-plugin": "5.45.0",
+    "@typescript-eslint/parser": "5.45.0",
+    "@vscode/test-electron": "2.2.0",
+    "esbuild": "0.16.12",
+    "eslint": "8.28.0",
+    "eslint-config-prettier": "8.5.0",
+    "glob": "8.0.3",
+    "husky": "8.0.2",
+    "lint-staged": "13.1.0",
+    "mocha": "10.1.0",
+    "prettier": "2.8.1",
+    "rimraf": "3.0.2",
+    "typescript": "4.9.3"
+  },
+  "pricing": "Free",
+  "sponsor": {
+    "url": "https://ko-fi.com/deniszholob"
+  }
+}

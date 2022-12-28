@@ -1,0 +1,25 @@
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+
+import { {{upperName}}Component } from './{{inputName}}.component';
+import { {{upperName}}Module } from './{{inputName}}.module';
+
+describe('{{upperName}}Component', () => {
+  let component: {{upperName}}Component;
+  let fixture: ComponentFixture<{{upperName}}Component>;
+
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [{{upperName}}Module],
+    }).compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent({{upperName}}Component);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

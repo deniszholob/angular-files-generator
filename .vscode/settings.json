@@ -1,0 +1,35 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+  "editor.renderWhitespace": "all",
+  "editor.rulers": [80, 140],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "explorer.sortOrderLexicographicOptions": "lower", // Case sensitive file ordering in tree
+  "workbench.iconTheme": "material-icon-theme",
+  "explorer.autoRevealExclude": {
+    "**/node_modules": true
+  },
+  "files.exclude": {
+    "node_modules": false,
+    "public/": false,
+    "screenshots/": false,
+    ".editorconfig": false,
+    ".eslint*": false,
+    ".gitignore": false,
+    ".npmrc": false,
+    ".prettierignore": false,
+    ".prettierrc": false,
+    ".vscodeignore": false,
+    "debug.log": false,
+    "package-lock.json": false,
+    "**/tsconfig*": false,
+    "**/tslint.json": false,
+    "FUNDING.yml": false,
+    "LICENSE": false,
+    "out": false
+  },
+  "search.exclude": {
+    "out": true // set this to false to include "out" folder in search results
+  },
+  // Turn off tsc task auto detection since we have the necessary tasks as npm scripts
+  "typescript.tsc.autoDetect": "off"
+}

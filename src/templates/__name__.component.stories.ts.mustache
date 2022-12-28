@@ -1,0 +1,29 @@
+import { Meta, moduleMetadata, Story } from '@storybook/angular';
+
+import { {{upperName}}Component } from './{{inputName}}.component';
+import { {{upperName}}Module } from './{{inputName}}.module';
+
+type ComponentWithCustomControls = {{upperName}}Component;
+
+const meta: Meta<ComponentWithCustomControls> = {
+  title: 'Components/{{upperName}}',
+  component: {{upperName}}Component,
+  decorators: [
+    moduleMetadata({
+      imports: [{{upperName}}Module],
+    }),
+  ],
+  parameters: {
+    docs: { description: { component: `{{upperName}}` } },
+  },
+  argTypes: {},
+  args: {},
+};
+export default meta;
+
+const Template: Story<ComponentWithCustomControls> = (
+  args: ComponentWithCustomControls
+) => ({ props: args });
+
+export const {{upperName}} = Template.bind({});
+{{upperName}}.args = {};

@@ -1,0 +1,10 @@
+# Ignore artifacts:
+out
+/.vscode-test
+
+# Markdown
+#*.md
+
+#Misc
+/node_modules
+package-lock.json
