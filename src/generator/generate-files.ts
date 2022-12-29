@@ -3,8 +3,8 @@ import Mustache = require('mustache');
 // import * as Mustache from 'mustache';
 import * as fs from 'fs';
 import * as path from 'path';
-import { ResourceType } from '../editor';
-import { log } from '../formatter';
+import { log } from './formatter';
+import { NgFileType } from './angular-file-type.model';
 
 export interface TemplateVariables {
   /** Ex: my-component */
@@ -17,7 +17,7 @@ export interface TemplateVariables {
   extensionRoot: string;
   /** Ex:  */
   outputDir: string;
-  resourceType: ResourceType;
+  resourceType: NgFileType;
 }
 
 export const TEMPLATES_FOLDER = 'templates';
@@ -58,24 +58,28 @@ export async function generate(
   );
 
   for (const templateFile of filteredTemplateFiles) {
-    const templateContent: string = await fs.promises.readFile(
-      `${templatesPath}/${templateFile}`,
-      'utf8'
-    );
-
-    const renderedTemplate: string = Mustache.render(
-      templateContent,
-      templateVariables
-    );
-
     const outputFileName: string = templateFile
       .replace('__name__', templateVariables.inputName)
       .replace('.mustache', '');
-
-    // write the rendered template to a file in the desired output directory
     const outputFilePath = `${outputPath}/${outputFileName}`;
 
-    log(`Writing template to ${outputFilePath}`);
-    await fs.promises.writeFile(outputFilePath, renderedTemplate);
+    if (await !fs.existsSync(outputFileName)) {
+      const templateContent: string = await fs.promises.readFile(
+        `${templatesPath}/${templateFile}`,
+        'utf8'
+      );
+
+      const renderedTemplate: string = Mustache.render(
+        templateContent,
+        templateVariables
+      );
+
+      // write the rendered template to a file in the desired output directory
+
+      log(`Writing template to ${outputFilePath}`);
+      fs.promises.writeFile(outputFilePath, renderedTemplate, {
+        flag: 'wx',
+      });
+    }
   }
 }

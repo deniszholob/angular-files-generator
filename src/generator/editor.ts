@@ -1,8 +1,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
-
-export type ResourceType = 'module' | 'service' | 'component';
+import {
+  AngularJsonConfig,
+  getAngularConfig,
+  getAngularPrefix,
+} from './angular-config';
+import { NgFileType } from './angular-file-type.model';
+import { log } from './formatter';
 
 export interface GenerationPathInfo {
   /** Full file path
@@ -34,15 +39,10 @@ export function displayStatusMessage(
 }
 
 export async function showFileNameDialog(
-  args: any,
-  resourceType: ResourceType,
-  defaultTypeName: string
+  resourceType: NgFileType,
+  clickedFolderPath?: string
 ): Promise<GenerationPathInfo> {
-  let clickedFolderPath: string;
-
-  if (args) {
-    clickedFolderPath = args.fsPath;
-  } else {
+  if (!clickedFolderPath) {
     if (!vscode.window.activeTextEditor) {
       throw new Error(
         'Please open a file first.. or just right-click on a file/folder and use the context menu!'
@@ -67,7 +67,7 @@ export async function showFileNameDialog(
 
   let fileName: string | undefined = await vscode.window.showInputBox({
     prompt: `Type the name of the new ${resourceType}`,
-    value: `${defaultTypeName}`,
+    value: `new-${resourceType}`,
   });
 
   if (!fileName) {

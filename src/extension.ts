@@ -2,66 +2,67 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import {
+  AngularJsonConfig,
+  getAngularConfig,
+  getAngularPrefix,
+} from './generator/angular-config';
+import { NgFileType, NG_FILE_TYPES } from './generator/angular-file-type.model';
+import {
   displayStatusMessage,
   GenerationPathInfo,
-  ResourceType,
   showFileNameDialog,
-} from './editor';
-import { log, toUpperCase } from './formatter';
-import { generate } from './generator/generate-component-module';
+} from './generator/editor';
+import { log, toTileCase, toUpperCase } from './generator/formatter';
+import { generate } from './generator/generate-files';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
+type RegisterCmdArgs = { fsPath: string };
+const EXTENSION_ID = 'angular-files-generator';
+
+/**
+ * This method is called when your extension is activated
+ * Extension is activated the very first time a command is executed
+ * Commands need to be defined in the package.json file
+ */
 export function activate(context: vscode.ExtensionContext): void {
-  // The command has been defined in the package.json file
-  // Now provide the implementation of the command with registerCommand
-  // The commandId parameter must match the command field in package.json
-  const cmdGenerateModule = vscode.commands.registerCommand(
-    'angular-files-generator.generateModule',
-    async (args) => {
-      generateCommand(args, 'module');
-    }
-  );
-  const cmdGenerateService = vscode.commands.registerCommand(
-    'angular-files-generator.generateService',
-    async (args) => {
-      generateCommand(args, 'service');
-    }
-  );
-  const cmdGenerateComponent = vscode.commands.registerCommand(
-    'angular-files-generator.generateComponent',
-    async (args) => {
-      generateCommand(args, 'component');
-    }
+  const generatorCommands: vscode.Disposable[] = NG_FILE_TYPES.map(
+    (type: NgFileType): vscode.Disposable =>
+      // Provided implementation of commands registered in package.json
+      // The commandId parameter must match the command field in package.json
+      vscode.commands.registerCommand(
+        `${EXTENSION_ID}.generate${toTileCase(type)}`,
+        (args) => generateCommand(args, type)
+      )
   );
 
   context.subscriptions.push(
-    cmdGenerateModule,
-    cmdGenerateService,
-    cmdGenerateComponent
+    ...generatorCommands,
+    vscode.commands.registerCommand(`${EXTENSION_ID}.test`, (args) => test())
   );
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate(): void {}
 
 async function generateCommand(
-  registerArgs: any,
-  resourceType: ResourceType
+  registerCmdArgs: RegisterCmdArgs | undefined,
+  resourceType: NgFileType
 ): Promise<void> {
   const paths: GenerationPathInfo = await showFileNameDialog(
-    registerArgs,
     resourceType,
-    `new-${resourceType}`
+    registerCmdArgs?.fsPath
   );
   log('Paths', paths);
+
+  const config: AngularJsonConfig | undefined = await getAngularConfig();
+  const prefix: string | undefined = await getAngularPrefix(config);
   await generate({
-    cmpSelector: 'app',
+    cmpSelector: prefix ?? 'app',
     inputName: paths.fileName,
     upperName: toUpperCase(paths.fileName),
     extensionRoot: __dirname,
     outputDir: paths.rootPath,
     resourceType,
-  });
-  await displayStatusMessage('Module', paths.fileName);
+  }).then(() => displayStatusMessage(resourceType, paths.fileName));
 }
+
+async function test() {}

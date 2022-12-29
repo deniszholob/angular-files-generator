@@ -12,7 +12,7 @@
     "url": "https://github.com/deniszholob/angular-files-generator/issues"
   },
   "icon": "images/icon-96x96.png",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "GPL-3",
   "engines": {
     "node": ">=18.12.1",
@@ -38,21 +38,21 @@
       "explorer/context": [
         {
           "submenu": "ng-generate.generate",
-          "group": "navigation"
+          "group": "angular-generator"
         }
       ],
       "ng-generate.generate": [
         {
           "command": "angular-files-generator.generateModule",
-          "group": "navigation"
+          "group": "generate"
         },
         {
           "command": "angular-files-generator.generateService",
-          "group": "navigation"
+          "group": "generate"
         },
         {
           "command": "angular-files-generator.generateComponent",
-          "group": "navigation"
+          "group": "generate"
         }
       ]
     },
@@ -65,22 +65,27 @@
     "commands": [
       {
         "command": "angular-files-generator.generateModule",
-        "title": "Module Component"
+        "title": "Generate Module Component"
       },
       {
         "command": "angular-files-generator.generateService",
-        "title": "Service"
+        "title": "Generate Service"
       },
       {
         "command": "angular-files-generator.generateComponent",
-        "title": "Component"
+        "title": "Generate Component"
+      },
+      {
+        "command": "angular-files-generator.test",
+        "title": "Test Command"
       }
     ]
   },
   "activationEvents": [
     "onCommand:angular-files-generator.generateModule",
     "onCommand:angular-files-generator.generateService",
-    "onCommand:angular-files-generator.generateComponent"
+    "onCommand:angular-files-generator.generateComponent",
+    "onCommand:angular-files-generator.test"
   ],
   "main": "./out/extension.js",
   "scripts": {
