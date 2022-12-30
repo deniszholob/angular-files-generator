@@ -12,7 +12,13 @@ import {
   GenerationPathInfo,
   showFileNameDialog,
 } from './generator/editor';
-import { log, toTileCase, toUpperCase } from './generator/formatter';
+import {
+  log,
+  normalize,
+  toReadableName,
+  toTitleCase,
+  toUpperName,
+} from './generator/formatter';
 import { generate } from './generator/generate-files';
 
 type RegisterCmdArgs = { fsPath: string };
@@ -29,7 +35,7 @@ export function activate(context: vscode.ExtensionContext): void {
       // Provided implementation of commands registered in package.json
       // The commandId parameter must match the command field in package.json
       vscode.commands.registerCommand(
-        `${EXTENSION_ID}.generate${toTileCase(type)}`,
+        `${EXTENSION_ID}.generate${toTitleCase(type)}`,
         (args) => generateCommand(args, type)
       )
   );
@@ -55,14 +61,16 @@ async function generateCommand(
 
   const config: AngularJsonConfig | undefined = await getAngularConfig();
   const prefix: string | undefined = await getAngularPrefix(config);
+  const inputName: string = normalize(paths.fileName);
   await generate({
     cmpSelector: prefix ?? 'app',
-    inputName: paths.fileName,
-    upperName: toUpperCase(paths.fileName),
+    inputName,
+    upperName: toUpperName(inputName),
+    readableName: toReadableName(inputName),
     extensionRoot: __dirname,
     outputDir: paths.rootPath,
     resourceType,
-  }).then(() => displayStatusMessage(resourceType, paths.fileName));
+  }).then(() => displayStatusMessage(resourceType, inputName));
 }
 
 async function test() {}

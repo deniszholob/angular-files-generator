@@ -11,12 +11,15 @@ export interface TemplateVariables {
   inputName: string;
   /** Ex: MyComponent */
   upperName: string;
+  /** Ex: My Component */
+  readableName: string;
   /** Ex: app */
   cmpSelector: string;
-  /** c:/src */
+  /** c:/out */
   extensionRoot: string;
-  /** Ex:  */
+  /** Ex: c:/right/click/dir */
   outputDir: string;
+  /** Ex: 'Module' */
   resourceType: NgFileType;
 }
 
@@ -26,6 +29,7 @@ export async function generate(
   templateVariables: TemplateVariables
 ): Promise<void> {
   log(`Generating into ${templateVariables.outputDir}`);
+  log('Template Variables:', templateVariables);
 
   const templatesPath: string = path.join(
     templateVariables.extensionRoot,
