@@ -15,7 +15,7 @@ export interface TemplateVariables {
   readableName: string;
   /** Ex: app */
   cmpSelector: string;
-  /** c:/out */
+  /** Ex: c:/out */
   extensionRoot: string;
   /** Ex: c:/right/click/dir */
   outputDir: string;

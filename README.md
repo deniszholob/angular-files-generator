@@ -32,6 +32,11 @@ https://github.com/deniszholob/angular-files-generator/issues
 
 https://github.com/deniszholob/angular-files-generator/releases
 
+## Dev
+[Extension Development Quick Start](./vsc-extension-quickstart.md)
+[VsCode First Extension Doc](https://code.visualstudio.com/api/get-started/your-first-extension)
+[VsCode API](https://code.visualstudio.com/api/references/vscode-api)
+
 # Support Me
 
 If you find the extension or the source code useful, consider:

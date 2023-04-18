@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.0.4]
+### Fixed
+- Component prefix will be generated even if angular.json is hidden in the workspace
+
 ## [0.0.3]
 ### Changed
 * Storybook title commented out by default, with title case words
