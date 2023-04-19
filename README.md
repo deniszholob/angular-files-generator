@@ -14,6 +14,24 @@ VSCode Extension to generate boilerplate files for Angular Modules, Components, 
   - Component generates html, spec, stories and ts
   - Service generates ts and spec
   - Module Component generates module ts, spec and everything component does
+- Type in `kebab-case` name
+
+### Custom Templates
+In `.vscode/settings.json` add in the following settings to customize the extension
+```json
+"angular-files-generator": {
+    "customTemplateFolder": null
+  },
+```
+`customTemplateFolder` - path relative you your workspace root, null will use the extension defaults
+
+* See the [default templates](https://github.com/deniszholob/angular-files-generator/tree/main/src/templates) for reference.
+* Naming should be`__name__.KEYWORD.EXTENSION.mustache` where KEYWORD is one of component, module or service. EXTENSION should reflect the file type and subtype, such as `spec.ts` for typescript tests.
+* [Available variables](./src/generator/TemplateVariables.model.ts) examples
+  * `{{cmpSelector}}` - app
+  * `{{inputName}}` - new-module
+  * `{{pascalName}}` - NewModule
+  * `{{readableName}}` - New Module
 
 ## Requirements
 

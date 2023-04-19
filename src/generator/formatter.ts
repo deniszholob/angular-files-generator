@@ -1,3 +1,5 @@
+// Ref for naming https://en.wikipedia.org/wiki/Naming_convention_(programming)#Examples_of_multiple-word_identifier_formats
+
 export function log(message: string, ...args: any[]): void {
   const LOG_PREFIX = `==== dzgn ====: `;
   console.log(`${LOG_PREFIX} ${message}`, ...args);
@@ -25,16 +27,16 @@ export function toCamelCase(input: string): string {
 
 /** Ex: my wonderful component */
 function dashToSpace(input: string): string {
-  return input.replace('-', ' ');
+  return input.replace(/-/g, ' ');
 }
 
 /** Ex: my-wonderful-component */
 function spaceToDash(input: string): string {
-  return input.replace(' ', '-');
+  return input.replace(/\s/g, '-');
 }
 
 /** Ex: MyWonderfulComponent */
-export function toUpperName(input: string): string {
+export function toPascalName(input: string): string {
   return toCamelCase(toTitleCase(input));
 }
 

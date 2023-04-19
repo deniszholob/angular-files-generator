@@ -17,7 +17,7 @@ import {
   normalize,
   toReadableName,
   toTitleCase,
-  toUpperName,
+  toPascalName,
 } from './generator/formatter';
 import { generate } from './generator/generate-files';
 
@@ -65,7 +65,7 @@ async function generateCommand(
   await generate({
     cmpSelector: prefix ?? 'app',
     inputName,
-    upperName: toUpperName(inputName),
+    pascalName: toPascalName(inputName),
     readableName: toReadableName(inputName),
     extensionRoot: __dirname,
     outputDir: paths.rootPath,

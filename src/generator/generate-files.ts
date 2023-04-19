@@ -3,24 +3,13 @@ import Mustache = require('mustache');
 // import * as Mustache from 'mustache';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as vscode from 'vscode';
+import { TemplateVariables } from './TemplateVariables.model';
 import { log } from './formatter';
-import { NgFileType } from './angular-file-type.model';
 
-export interface TemplateVariables {
-  /** Ex: my-component */
-  inputName: string;
-  /** Ex: MyComponent */
-  upperName: string;
-  /** Ex: My Component */
-  readableName: string;
-  /** Ex: app */
-  cmpSelector: string;
-  /** Ex: c:/out */
-  extensionRoot: string;
-  /** Ex: c:/right/click/dir */
-  outputDir: string;
-  /** Ex: 'Module' */
-  resourceType: NgFileType;
+interface TemplateFile {
+  name: string;
+  path: string;
 }
 
 export const TEMPLATES_FOLDER = 'templates';
@@ -31,11 +20,34 @@ export async function generate(
   log(`Generating into ${templateVariables.outputDir}`);
   log('Template Variables:', templateVariables);
 
-  const templatesPath: string = path.join(
+  // Default Template Dir
+  const defaultTemplatesPath: string = path.join(
     templateVariables.extensionRoot,
     TEMPLATES_FOLDER
   );
-  log(`templatesPath ${templatesPath}`);
+  log(`defaultTemplatesPath ${defaultTemplatesPath}`);
+  const defaultTemplateFiles: string[] = await fs.promises.readdir(
+    defaultTemplatesPath
+  );
+  log(`defaultTemplateFiles`, defaultTemplateFiles);
+
+  // Custom Template Dir
+  // From package.json/contributes/configuration/properties
+  const customTemplatesFolder: string | null | undefined = vscode.workspace
+    .getConfiguration('angular-files-generator')
+    .get('customTemplateFolder');
+  const workspaceRoot = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
+  log(`workspaceRoot `, workspaceRoot);
+  const customTemplatesPath =
+    workspaceRoot && customTemplatesFolder
+      ? path.join(workspaceRoot, customTemplatesFolder)
+      : undefined;
+  log(`customTemplatesPath ${customTemplatesPath}`);
+  const customTemplateFiles: string[] =
+    customTemplatesPath && fs.existsSync(customTemplatesPath)
+      ? await fs.promises.readdir(customTemplatesPath)
+      : [];
+  log(`customTemplateFiles`, customTemplateFiles);
 
   // Add named directory if not already in path
   const outputPath: string = path.join(
@@ -45,31 +57,46 @@ export async function generate(
       : templateVariables.inputName
   );
   log(`outputPath ${outputPath}`);
-
   if (await !fs.existsSync(outputPath)) {
     await fs.promises.mkdir(outputPath);
   }
 
-  const templateFiles: string[] = await fs.promises.readdir(templatesPath);
-  log(`Template files`, templateFiles);
-
-  const filteredTemplateFiles: string[] = templateFiles.filter(
-    (templateFile) => {
-      return templateVariables.resourceType === 'module'
-        ? templateFile.includes('module') || templateFile.includes('component')
-        : templateFile.includes(templateVariables.resourceType);
+  // If there is a custom template use it, otherwise use the default
+  const templateFiles: TemplateFile[] = defaultTemplateFiles.map(
+    (defaultFileName: string): TemplateFile => {
+      const customFileName: string | undefined = customTemplateFiles.find(
+        (customFile) => customFile === defaultFileName
+      );
+      return {
+        name: customFileName ?? defaultFileName,
+        path:
+          customFileName && customTemplatesPath
+            ? path.join(customTemplatesPath, customFileName)
+            : path.join(defaultTemplatesPath, defaultFileName),
+      };
     }
   );
 
+  // Filter based on the user selected generator option (component, module service or both component+module)
+  const filteredTemplateFiles: TemplateFile[] = templateFiles.filter(
+    (templateFile) => {
+      return templateVariables.resourceType === 'module'
+        ? templateFile.name.includes('module') ||
+            templateFile.name.includes('component')
+        : templateFile.name.includes(templateVariables.resourceType);
+    }
+  );
+
+  // Render each template out
   for (const templateFile of filteredTemplateFiles) {
-    const outputFileName: string = templateFile
+    const outputFileName: string = templateFile.name
       .replace('__name__', templateVariables.inputName)
       .replace('.mustache', '');
     const outputFilePath = `${outputPath}/${outputFileName}`;
 
     if (await !fs.existsSync(outputFileName)) {
       const templateContent: string = await fs.promises.readFile(
-        `${templatesPath}/${templateFile}`,
+        templateFile.path,
         'utf8'
       );
 
@@ -79,11 +106,8 @@ export async function generate(
       );
 
       // write the rendered template to a file in the desired output directory
-
       log(`Writing template to ${outputFilePath}`);
-      fs.promises.writeFile(outputFilePath, renderedTemplate, {
-        flag: 'wx',
-      });
+      fs.promises.writeFile(outputFilePath, renderedTemplate, { flag: 'wx' });
     }
   }
 }
