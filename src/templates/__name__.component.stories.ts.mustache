@@ -1,20 +1,20 @@
 import { Meta, moduleMetadata, Story } from '@storybook/angular';
 
-import { {{pascalName}}Component } from './{{inputName}}.component';
-import { {{pascalName}}Module } from './{{inputName}}.module';
+import { {{upperCamelCaseName}}Component } from './{{dashCaseName}}.component';
+import { {{upperCamelCaseName}}Module } from './{{dashCaseName}}.module';
 
-type ComponentWithCustomControls = {{pascalName}}Component;
+type ComponentWithCustomControls = {{upperCamelCaseName}}Component;
 
 const meta: Meta<ComponentWithCustomControls> = {
-  // title: 'Components/{{readableName}}',
-  component: {{pascalName}}Component,
+  // title: 'Components/{{upperReadableName}}',
+  component: {{upperCamelCaseName}}Component,
   decorators: [
     moduleMetadata({
-      imports: [{{pascalName}}Module],
+      imports: [{{upperCamelCaseName}}Module],
     }),
   ],
   parameters: {
-    docs: { description: { component: `{{pascalName}}` } },
+    docs: { description: { component: `{{upperCamelCaseName}}` } },
   },
   argTypes: {},
   args: {},
@@ -25,5 +25,5 @@ const Template: Story<ComponentWithCustomControls> = (
   args: ComponentWithCustomControls
 ) => ({ props: args });
 
-export const {{pascalName}} = Template.bind({});
-{{pascalName}}.args = {};
+export const {{upperCamelCaseName}} = Template.bind({});
+{{upperCamelCaseName}}.args = {};

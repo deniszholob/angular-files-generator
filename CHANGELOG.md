@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.0.5]
+### Changed
+- Template variable names to be more consistent
+
 ## [0.0.4]
 ### Added
 - Custom Templates support; allowing to customize rendering of the files
@@ -9,7 +13,7 @@
 
 ### Fixed
 - Component prefix will be generated even if angular.json is hidden in the workspace
-- Multi word names were rendering mixed readable and kebab case Storybook title
+- Multi word names were rendering mixed readable and dash case Storybook title
 
 ## [0.0.3]
 ### Changed

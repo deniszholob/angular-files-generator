@@ -52,9 +52,9 @@ export async function generate(
   // Add named directory if not already in path
   const outputPath: string = path.join(
     templateVariables.outputDir,
-    templateVariables.outputDir.includes(templateVariables.inputName)
+    templateVariables.outputDir.includes(templateVariables.dashCaseName)
       ? ''
-      : templateVariables.inputName
+      : templateVariables.dashCaseName
   );
   log(`outputPath ${outputPath}`);
   if (await !fs.existsSync(outputPath)) {
@@ -90,7 +90,7 @@ export async function generate(
   // Render each template out
   for (const templateFile of filteredTemplateFiles) {
     const outputFileName: string = templateFile.name
-      .replace('__name__', templateVariables.inputName)
+      .replace('__name__', templateVariables.dashCaseName)
       .replace('.mustache', '');
     const outputFilePath = `${outputPath}/${outputFileName}`;
 

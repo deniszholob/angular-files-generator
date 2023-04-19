@@ -6,8 +6,23 @@ export function log(message: string, ...args: any[]): void {
 }
 
 /** Ex: my-wonderful-component */
-export function normalize(input: string): string {
+export function toDashCaseName(input: string): string {
   return spaceToDash(input.toLocaleLowerCase().trim());
+}
+
+/** Ex: MyWonderfulComponent */
+export function toUpperCamelCaseName(input: string): string {
+  return toCamelCase(toTitleCase(input));
+}
+
+/** Ex: My Wonderful Component */
+export function toUpperReadableName(input: string): string {
+  return toWordCase(toTitleCase(dashToSpace(input)));
+}
+
+/** Ex: MY_WONDERFUL_COMPONENT */
+export function toConstantCaseName(input: string): string {
+  return dashToUnderscore(input.toUpperCase());
 }
 
 /** Ex: My wonderful component */
@@ -25,22 +40,17 @@ export function toCamelCase(input: string): string {
   return input.replace(/[- _]([a-z])/gi, (all, letter) => letter.toUpperCase());
 }
 
-/** Ex: my wonderful component */
-function dashToSpace(input: string): string {
-  return input.replace(/-/g, ' ');
-}
-
 /** Ex: my-wonderful-component */
 function spaceToDash(input: string): string {
   return input.replace(/\s/g, '-');
 }
 
-/** Ex: MyWonderfulComponent */
-export function toPascalName(input: string): string {
-  return toCamelCase(toTitleCase(input));
+/** Ex: my wonderful component */
+function dashToSpace(input: string): string {
+  return input.replace(/-/g, ' ');
 }
 
-/** Ex: My Wonderful Component */
-export function toReadableName(input: string): string {
-  return toWordCase(toTitleCase(dashToSpace(input)));
+/** Ex: my_wonderful_component */
+function dashToUnderscore(input: string): string {
+  return input.replace(/-/g, '_');
 }

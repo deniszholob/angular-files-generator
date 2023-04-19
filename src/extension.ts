@@ -6,18 +6,19 @@ import {
   getAngularConfig,
   getAngularPrefix,
 } from './generator/angular-config';
-import { NgFileType, NG_FILE_TYPES } from './generator/angular-file-type.model';
+import { NG_FILE_TYPES, NgFileType } from './generator/angular-file-type.model';
 import {
-  displayStatusMessage,
   GenerationPathInfo,
+  displayStatusMessage,
   showFileNameDialog,
 } from './generator/editor';
 import {
   log,
-  normalize,
-  toReadableName,
+  toConstantCaseName,
+  toDashCaseName,
   toTitleCase,
-  toPascalName,
+  toUpperCamelCaseName,
+  toUpperReadableName,
 } from './generator/formatter';
 import { generate } from './generator/generate-files';
 
@@ -61,16 +62,17 @@ async function generateCommand(
 
   const config: AngularJsonConfig | undefined = await getAngularConfig();
   const prefix: string | undefined = await getAngularPrefix(config);
-  const inputName: string = normalize(paths.fileName);
+  const dashCaseName: string = toDashCaseName(paths.fileName);
   await generate({
-    cmpSelector: prefix ?? 'app',
-    inputName,
-    pascalName: toPascalName(inputName),
-    readableName: toReadableName(inputName),
+    componentPrefix: prefix ?? 'app',
+    dashCaseName,
+    upperCamelCaseName: toUpperCamelCaseName(dashCaseName),
+    constantCaseName: toConstantCaseName(dashCaseName),
+    upperReadableName: toUpperReadableName(dashCaseName),
     extensionRoot: __dirname,
     outputDir: paths.rootPath,
     resourceType,
-  }).then(() => displayStatusMessage(resourceType, inputName));
+  }).then(() => displayStatusMessage(resourceType, dashCaseName));
 }
 
 async function test() {}

@@ -1,16 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 
-import { {{pascalName}}Module } from './{{inputName}}.module';
+import { {{upperCamelCaseName}}Module } from './{{dashCaseName}}.module';
 
-describe('{{pascalName}}Module', () => {
+describe('{{upperCamelCaseName}}Module', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [{{pascalName}}Module],
+      imports: [{{upperCamelCaseName}}Module],
     });
   });
 
   it('initializes', () => {
-    const module: {{pascalName}}Module = TestBed.inject({{pascalName}}Module);
+    const module: {{upperCamelCaseName}}Module = TestBed.inject({{upperCamelCaseName}}Module);
     expect(module).toBeTruthy();
   });
 });

@@ -1,14 +1,16 @@
 import { NgFileType } from './angular-file-type.model';
 
 export interface TemplateVariables {
-  /** Ex: my-component */
-  inputName: string;
-  /** Ex: MyComponent */
-  pascalName: string;
-  /** Ex: My Component */
-  readableName: string;
   /** Ex: app */
-  cmpSelector: string;
+  componentPrefix: string;
+  /** Ex: my-component */
+  dashCaseName: string;
+  /** Ex: MyComponent */
+  upperCamelCaseName: string;
+  /** Ex: MY_COMPONENT */
+  constantCaseName: string;
+  /** Ex: My Component */
+  upperReadableName: string;
   /** Ex: c:/out */
   extensionRoot: string;
   /** Ex: c:/right/click/dir */

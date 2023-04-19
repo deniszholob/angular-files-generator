@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { {{pascalName}}Component } from './{{inputName}}.component';
+import { {{upperCamelCaseName}}Component } from './{{dashCaseName}}.component';
 
 @NgModule({
   imports: [CommonModule],
-  declarations: [{{pascalName}}Component],
-  exports: [{{pascalName}}Component],
+  declarations: [{{upperCamelCaseName}}Component],
+  exports: [{{upperCamelCaseName}}Component],
 })
-export class {{pascalName}}Module {}
+export class {{upperCamelCaseName}}Module {}
