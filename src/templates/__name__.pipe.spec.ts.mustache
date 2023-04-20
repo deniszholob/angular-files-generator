@@ -1,0 +1,13 @@
+import { {{upperCamelCaseName}}Pipe } from './{{dashCaseName}}.pipe';
+
+describe('{{upperCamelCaseName}}Pipe', () => {
+  const pipe: {{upperCamelCaseName}}Pipe = new {{upperCamelCaseName}}Pipe();
+
+  it('should create', () => {
+    expect(pipe).toBeTruthy();
+  });
+
+  it('returns null for input', () => {
+    expect(pipe.transform(null)).toStrictEqual(null);
+  });
+});

@@ -67,7 +67,7 @@ export async function showFileNameDialog(
 
   let fileName: string | undefined = await vscode.window.showInputBox({
     prompt: `Type the name of the new ${resourceType}`,
-    value: `my-new-${resourceType}`,
+    value: `new-${resourceType}`,
   });
 
   if (!fileName) {

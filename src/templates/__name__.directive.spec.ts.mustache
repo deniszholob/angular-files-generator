@@ -1,0 +1,19 @@
+import { {{upperCamelCaseName}}Directive } from './{{dashCaseName}}.directive';
+
+describe('{{upperCamelCaseName}}Directive', () => {
+  const directive: {{upperCamelCaseName}}Directive = new {{upperCamelCaseName}}Directive();
+
+  // beforeEach(waitForAsync(() => {
+  //   TestBed.configureTestingModule({
+  //     providers: [NewDirectiveDirective],
+  //   }).compileComponents();
+  // }));
+
+  // beforeEach(() => {
+  //   directive = TestBed.inject(NewDirectiveDirective);
+  // });
+
+  it('should create', () => {
+    expect(directive).toBeTruthy();
+  });
+});

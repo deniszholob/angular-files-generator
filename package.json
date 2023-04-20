@@ -1,7 +1,7 @@
 {
   "name": "angular-files-generator",
   "displayName": "Angular Files Generator",
-  "description": "Generator for Angular Modules, Components, etc...",
+  "description": "Customizable Generator for Angular Modules, Components, etc...",
   "author": "Denis Zholob",
   "publisher": "deniszholob",
   "repository": {
@@ -28,7 +28,8 @@
     "Schematic",
     "Generator",
     "Storybook",
-    "Jest"
+    "Jest",
+    "Boilerplate"
   ],
   "categories": [
     "Other",
@@ -39,13 +40,23 @@
     "configuration": {
       "title": "Angular Files Generator",
       "properties": {
-        "customTemplateFolder": {
+        "angular-files-generator.customTemplateFolder": {
           "type": [
             "string",
             "null"
           ],
           "default": null,
-          "markdownDescription": "Custom Template Directory Location, if null will use extension default templates."
+          "description": "Custom template folder location. Path relative you your workspace root. If null will use extension default templates."
+        },
+        "angular-files-generator.generateSpec": {
+          "type": "boolean",
+          "default": true,
+          "description": "Toggle generation of spec files."
+        },
+        "angular-files-generator.generateStories": {
+          "type": "boolean",
+          "default": true,
+          "description": "Toggle generation of stories files."
         }
       }
     },
@@ -59,15 +70,27 @@
       "ng-generate.generate": [
         {
           "command": "angular-files-generator.generateModule",
-          "group": "generate"
-        },
-        {
-          "command": "angular-files-generator.generateService",
-          "group": "generate"
+          "group": "generate@1"
         },
         {
           "command": "angular-files-generator.generateComponent",
-          "group": "generate"
+          "group": "generate@2"
+        },
+        {
+          "command": "angular-files-generator.generateService",
+          "group": "generate@3"
+        },
+        {
+          "command": "angular-files-generator.generateDirective",
+          "group": "generate2@1"
+        },
+        {
+          "command": "angular-files-generator.generatePipe",
+          "group": "generate2@2"
+        },
+        {
+          "command": "angular-files-generator.generateRoute",
+          "group": "generate2@3"
         }
       ]
     },
@@ -91,6 +114,18 @@
         "title": "Generate Component"
       },
       {
+        "command": "angular-files-generator.generateDirective",
+        "title": "Generate Directive"
+      },
+      {
+        "command": "angular-files-generator.generatePipe",
+        "title": "Generate Pipe"
+      },
+      {
+        "command": "angular-files-generator.generateRoute",
+        "title": "Generate Route"
+      },
+      {
         "command": "angular-files-generator.test",
         "title": "Test Command"
       }
@@ -100,6 +135,9 @@
     "onCommand:angular-files-generator.generateModule",
     "onCommand:angular-files-generator.generateService",
     "onCommand:angular-files-generator.generateComponent",
+    "onCommand:angular-files-generator.generateDirective",
+    "onCommand:angular-files-generator.generatePipe",
+    "onCommand:angular-files-generator.generateRoute",
     "onCommand:angular-files-generator.test"
   ],
   "main": "./out/extension.js",

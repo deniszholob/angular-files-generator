@@ -6,6 +6,11 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import { TemplateVariables } from './TemplateVariables.model';
 import { log } from './formatter';
+import {
+  getSetting_customTemplateFolder,
+  getSetting_generateSpec,
+  getSetting_generateStories,
+} from './settings';
 
 interface TemplateFile {
   name: string;
@@ -32,10 +37,8 @@ export async function generate(
   log(`defaultTemplateFiles`, defaultTemplateFiles);
 
   // Custom Template Dir
-  // From package.json/contributes/configuration/properties
-  const customTemplatesFolder: string | null | undefined = vscode.workspace
-    .getConfiguration('angular-files-generator')
-    .get('customTemplateFolder');
+  const customTemplatesFolder: string | null | undefined =
+    getSetting_customTemplateFolder();
   const workspaceRoot = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
   log(`workspaceRoot `, workspaceRoot);
   const customTemplatesPath =
@@ -78,7 +81,7 @@ export async function generate(
   );
 
   // Filter based on the user selected generator option (component, module service or both component+module)
-  const filteredTemplateFiles: TemplateFile[] = templateFiles.filter(
+  let filteredTemplateFiles: TemplateFile[] = templateFiles.filter(
     (templateFile) => {
       return templateVariables.resourceType === 'module'
         ? templateFile.name.includes('module') ||
@@ -86,6 +89,18 @@ export async function generate(
         : templateFile.name.includes(templateVariables.resourceType);
     }
   );
+
+  if (!getSetting_generateSpec()) {
+    filteredTemplateFiles = filteredTemplateFiles.filter(
+      (tf) => !tf.name.includes('.spec.ts')
+    );
+  }
+
+  if (!getSetting_generateStories()) {
+    filteredTemplateFiles = filteredTemplateFiles.filter(
+      (tf) => !tf.name.includes('.stories.ts')
+    );
+  }
 
   // Render each template out
   for (const templateFile of filteredTemplateFiles) {

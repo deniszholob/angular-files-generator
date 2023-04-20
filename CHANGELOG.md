@@ -3,6 +3,9 @@
 ## [Unreleased]
 
 ## [0.0.5]
+### Added
+  - More generator options: Route, Directive, Pipe
+  - New setting options to toggle specs and stories
 ### Changed
 - Template variable names to be more consistent
 

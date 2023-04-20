@@ -2,31 +2,47 @@
 
 VSCode Extension to generate boilerplate files for Angular Modules, Components, etc...
 
+Why use it? **Customization** to fit your needs!
+
+While the default ng or nx generator is great, this allows you to customize your new generated files to fit your workflow without having to delete or add repetitively to the generated files.
+
+## Support Me
+
+If you find the extension or the source code useful, consider:
+
+- Donating on Ko-fi: https://ko-fi.com/deniszholob
+- Donating on Patreon: https://www.patreon.com/deniszholob
+
 ## Features
 
-![UI](./screenshots/angular-files-generator-ui.png)
-
-![Generated Files](./screenshots/angular-files-generator-result.png)
-
-- Right click in the explorer
+- Right click in the explorer  
+  ![UI](./screenshots/angular-files-generator-ui.png)
 - Select "Angular Generator"
 - Select what you want to generate
   - Component generates html, spec, stories and ts
   - Service generates ts and spec
   - Module Component generates module ts, spec and everything component does
-- Type in `dash-case` name
+- Type in `dash-case` name  
+  ![Name Input](./screenshots/angular-files-generator-input.png)
+- New files will be generated. You can right click into the folder to generate more. No files will be overridden.  
+  ![Generated Files](./screenshots/angular-files-generator-result.png)
 
-### Custom Templates
-In `.vscode/settings.json` add in the following settings to customize the extension
+## Extension Settings/Config
+In `.vscode/settings.json` add in the following settings to customize the extension.
+
+* `customTemplateFolder` - Custom template folder location. Path relative you your workspace root. If null will use extension default templates.
+* `generateSpec` - Toggle generation of spec files.
+* `generateStories` - Toggle generation of stories files.
+
 ```json
-"angular-files-generator": {
-    "customTemplateFolder": null
-  },
+  "angular-files-generator.customTemplateFolder": ".vscode/ngfg-templates",
+  "angular-files-generator.generateSpec": true,
+  "angular-files-generator.generateStories": true,
 ```
-`customTemplateFolder` - path relative you your workspace root, null will use the extension defaults
-
+## Custom Templates
+* Set the `customTemplateFolder` config to your custom template folder.
 * See the [default templates](https://github.com/deniszholob/angular-files-generator/tree/main/src/templates) for reference.
-* Naming should be`__name__.KEYWORD.EXTENSION.mustache` where KEYWORD is one of component, module or service. EXTENSION should reflect the file type and subtype, such as `spec.ts` for typescript tests.
+* File naming should be`__name__.KEYWORD.EXTENSION.mustache` where KEYWORD is one of component, module or service. EXTENSION should reflect the file type and subtype, such as `spec.ts` for typescript tests.
 * [Available variables](./src/generator/TemplateVariables.model.ts) examples
   * `{{componentPrefix}}` - app
   * `{{dashCaseName}}` - new-module
@@ -47,23 +63,7 @@ To use the files install
 
 https://github.com/deniszholob/angular-files-generator/issues
 
-## Release Notes
-
-https://github.com/deniszholob/angular-files-generator/releases
-
-## Dev
-[Extension Development Quick Start](./vsc-extension-quickstart.md)
-[VsCode First Extension Doc](https://code.visualstudio.com/api/get-started/your-first-extension)
-[VsCode API](https://code.visualstudio.com/api/references/vscode-api)
-
-# Support Me
-
-If you find the extension or the source code useful, consider:
-
-- Donating on Ko-fi: https://ko-fi.com/deniszholob
-- Donating on Patreon: https://www.patreon.com/deniszholob
-
-# Downloads
+## Downloads
 
 - [Github](https://github.com/deniszholob/angular-files-generator/releases)
 - [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=deniszholob.angular-files-generator)
