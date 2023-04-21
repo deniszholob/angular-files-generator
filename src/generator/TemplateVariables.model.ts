@@ -1,5 +1,3 @@
-import { NgFileType } from './angular-file-type.model';
-
 export interface TemplateVariables {
   /** Ex: app */
   componentPrefix: string;
@@ -11,10 +9,4 @@ export interface TemplateVariables {
   constantCaseName: string;
   /** Ex: My Component */
   upperReadableName: string;
-  /** Ex: c:/out */
-  extensionRoot: string;
-  /** Ex: c:/right/click/dir */
-  outputDir: string;
-  /** Ex: 'Module' */
-  resourceType: NgFileType;
 }

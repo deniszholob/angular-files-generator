@@ -5,6 +5,22 @@ export function log(message: string, ...args: any[]): void {
   console.log(`${LOG_PREFIX} ${message}`, ...args);
 }
 
+export function arrayToStingList({
+  arr,
+  delimiter = '',
+  prefix = '',
+}: {
+  arr: string[];
+  delimiter?: string;
+  prefix?: string;
+}): string {
+  return arr.length > 0
+    ? `${prefix}${arr.reduce(
+        (acc, curr) => `${acc.trim()}${delimiter}${prefix}${curr.trim()}`
+      )}`
+    : '';
+}
+
 /** Ex: my-wonderful-component */
 export function toDashCaseName(input: string): string {
   return spaceToDash(input.toLocaleLowerCase().trim());

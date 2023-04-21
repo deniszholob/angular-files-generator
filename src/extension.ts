@@ -9,10 +9,12 @@ import {
 import { NG_FILE_TYPES, NgFileType } from './generator/angular-file-type.model';
 import {
   GenerationPathInfo,
-  displayStatusMessage,
+  displayNotGeneratedFilesMessage,
+  displaySuccessMessage,
   showFileNameDialog,
 } from './generator/editor';
 import {
+  arrayToStingList,
   log,
   toConstantCaseName,
   toDashCaseName,
@@ -24,6 +26,7 @@ import { generate } from './generator/generate-files';
 
 type RegisterCmdArgs = { fsPath: string };
 const EXTENSION_ID = 'angular-files-generator';
+const DEFAULT_ANGULAR_PREFIX = 'app';
 
 /**
  * This method is called when your extension is activated
@@ -52,10 +55,10 @@ export function deactivate(): void {}
 
 async function generateCommand(
   registerCmdArgs: RegisterCmdArgs | undefined,
-  resourceType: NgFileType
+  ngFileType: NgFileType
 ): Promise<void> {
   const paths: GenerationPathInfo = await showFileNameDialog(
-    resourceType,
+    ngFileType,
     registerCmdArgs?.fsPath
   );
   log('Paths', paths);
@@ -63,16 +66,29 @@ async function generateCommand(
   const config: AngularJsonConfig | undefined = await getAngularConfig();
   const prefix: string | undefined = await getAngularPrefix(config);
   const dashCaseName: string = toDashCaseName(paths.fileName);
-  await generate({
-    componentPrefix: prefix ?? 'app',
-    dashCaseName,
-    upperCamelCaseName: toUpperCamelCaseName(dashCaseName),
-    constantCaseName: toConstantCaseName(dashCaseName),
-    upperReadableName: toUpperReadableName(dashCaseName),
-    extensionRoot: __dirname,
-    outputDir: paths.rootPath,
-    resourceType,
-  }).then(() => displayStatusMessage(resourceType, dashCaseName));
+  await generate(
+    {
+      componentPrefix: prefix ?? DEFAULT_ANGULAR_PREFIX,
+      dashCaseName,
+      upperCamelCaseName: toUpperCamelCaseName(dashCaseName),
+      constantCaseName: toConstantCaseName(dashCaseName),
+      upperReadableName: toUpperReadableName(dashCaseName),
+    },
+    {
+      extensionSrcDir: __dirname,
+      outputDir: paths.rootPath,
+      ngFileType,
+    }
+  )
+    .then((filesAlreadyExist: string[]) => {
+      if (filesAlreadyExist.length) {
+        displayNotGeneratedFilesMessage(filesAlreadyExist);
+      }
+      displaySuccessMessage(ngFileType, dashCaseName);
+    })
+    .catch((e) => {
+      vscode.window.showErrorMessage(String(e));
+    });
 }
 
 async function test() {}

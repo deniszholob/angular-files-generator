@@ -7,7 +7,7 @@ import {
   getAngularPrefix,
 } from './angular-config';
 import { NgFileType } from './angular-file-type.model';
-import { log } from './formatter';
+import { arrayToStingList, log } from './formatter';
 
 export interface GenerationPathInfo {
   /** Full file path
@@ -27,19 +27,25 @@ export interface GenerationPathInfo {
   rootPath: string;
 }
 
-export function displayStatusMessage(
+export function displaySuccessMessage(
   type: string,
   name: string,
   timeout = 2000
 ): void {
-  vscode.window.setStatusBarMessage(
-    `${type} ${name} was successfully generated`,
-    timeout
-  );
+  const message: string = `${type} ${name} was successfully generated`;
+  log(message);
+  vscode.window.setStatusBarMessage(message, timeout);
 }
 
+export function displayNotGeneratedFilesMessage(files: string[]): void {
+  const message: string =
+    'Skipped these files as they already exist:\n' +
+    arrayToStingList({ arr: files, delimiter: ', ' });
+  log(message);
+  vscode.window.showInformationMessage(message);
+}
 export async function showFileNameDialog(
-  resourceType: NgFileType,
+  ngFileType: NgFileType,
   clickedFolderPath?: string
 ): Promise<GenerationPathInfo> {
   if (!clickedFolderPath) {
@@ -66,8 +72,8 @@ export async function showFileNameDialog(
   }
 
   let fileName: string | undefined = await vscode.window.showInputBox({
-    prompt: `Type the name of the new ${resourceType}`,
-    value: `new-${resourceType}`,
+    prompt: `Type the name of the new ${ngFileType}`,
+    value: `my-${ngFileType}-name`,
   });
 
   if (!fileName) {

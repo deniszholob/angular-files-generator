@@ -43,6 +43,8 @@ In `.vscode/settings.json` add in the following settings to customize the extens
 * Set the `customTemplateFolder` config to your custom template folder.
 * See the [default templates](https://github.com/deniszholob/angular-files-generator/tree/main/src/templates) for reference.
 * File naming should be`__name__.KEYWORD.EXTENSION.mustache` where KEYWORD is one of component, module or service. EXTENSION should reflect the file type and subtype, such as `spec.ts` for typescript tests.
+* Additional files with `KEYWORD` will also be rendered.  
+  Example: `__name__.component.scss.mustache` does not have a default template, but will be rendered if included in the user's custom template folder.
 * [Available variables](./src/generator/TemplateVariables.model.ts) examples
   * `{{componentPrefix}}` - app
   * `{{dashCaseName}}` - new-module
