@@ -1,16 +1,9 @@
-import { TestBed } from '@angular/core/testing';
-
 import { {{upperCamelCaseName}}Module } from './{{dashCaseName}}.module';
 
 describe('{{upperCamelCaseName}}Module', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [{{upperCamelCaseName}}Module],
-    });
-  });
+  const module: {{upperCamelCaseName}}Module = new {{upperCamelCaseName}}Module();
 
-  it('initializes', () => {
-    const module: {{upperCamelCaseName}}Module = TestBed.inject({{upperCamelCaseName}}Module);
+  it('should create', () => {
     expect(module).toBeTruthy();
   });
 });

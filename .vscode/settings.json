@@ -8,6 +8,9 @@
   "explorer.autoRevealExclude": {
     "**/node_modules": true
   },
+  "material-icon-theme.folders.associations": {
+    "templates-alt": "template"
+  },
   "files.exclude": {
     ".husky": true,
     ".vscode-test": true,

@@ -12,7 +12,7 @@
     "url": "https://github.com/deniszholob/angular-files-generator/issues"
   },
   "icon": "images/icon-96x96.png",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "license": "GPL-3",
   "engines": {
     "node": ">=18.12.1",
@@ -47,6 +47,11 @@
           ],
           "default": null,
           "description": "Custom template folder location. Path relative you your workspace root. If null will use extension default templates."
+        },
+        "angular-files-generator.defaultSpecsUseTestBed": {
+          "type": "boolean",
+          "default": false,
+          "description": "Toggle using default spec templates with angular TestBed or without it for better performance."
         },
         "angular-files-generator.generateSpec": {
           "type": "boolean",
@@ -146,7 +151,7 @@
     "package": "npx vsce package",
     "publish": "npx vsce publish",
     "remove-output": "rimraf ./out ",
-    "template-copy": "copyfiles -f ./src/templates/**/*.mustache ./out/templates/",
+    "template-copy": "copyfiles -f ./src/templates/**/*.mustache ./out/templates/ && copyfiles -f ./src/templates-alt/**/*.mustache ./out/templates-alt/",
     "compile": "npm run pre-build && tsc -p ./",
     "watch": "npm run pre-build && tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",

@@ -1,0 +1,25 @@
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+
+import { {{upperCamelCaseName}}Component } from './{{dashCaseName}}.component';
+import { {{upperCamelCaseName}}Module } from './{{dashCaseName}}.module';
+
+describe('{{upperCamelCaseName}}Component', () => {
+  let component: {{upperCamelCaseName}}Component;
+  let fixture: ComponentFixture<{{upperCamelCaseName}}Component>;
+
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [{{upperCamelCaseName}}Module],
+    }).compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent({{upperCamelCaseName}}Component);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

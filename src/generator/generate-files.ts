@@ -9,6 +9,7 @@ import { NgFileType } from './angular-file-type.model';
 import { log } from './formatter';
 import {
   getSetting_customTemplateFolder,
+  getSetting_defaultSpecsUseTestBed,
   getSetting_generateSpec,
   getSetting_generateStories,
 } from './settings';
@@ -16,9 +17,11 @@ import {
   ArrayComparator,
   arrayDifference,
   arrayIntersection,
+  arrayUnionOverride,
 } from './array-functions';
 
 export const TEMPLATES_FOLDER = 'templates';
+export const TEMPLATES_ALT_FOLDER = 'templates-alt'; // Currently are alt tests using TestBed
 export interface GeneratorVariables {
   /** Ex: c:/angular-files-generator/out */
   extensionSrcDir: string;
@@ -39,6 +42,9 @@ interface Templates {
   templatesPath: string;
   templateFiles: string[];
 }
+
+const comparatorTemplateFile: ArrayComparator<TemplateFile> = (a, b) =>
+  a.name === b.name;
 
 /** Main generator function: Gathers template files and converts to angular files via Mustache.js */
 export async function generate(
@@ -69,18 +75,24 @@ export async function generate(
     templateVariables
   );
 }
+/** @returns templates from directory */
+async function getTemplates(templatesPath: string): Promise<Templates> {
+  const templateFiles: string[] = await fs.promises.readdir(templatesPath);
+  return { templatesPath, templateFiles };
+  // return templateFiles.map((f) => new TemplateFile(f, templatesPath));
+}
 
 /** @returns extension's default templates */
 async function getExtensionTemplates(
-  extensionSrcDir: string
+  extensionSrcDir: string,
+  templateFolder:
+    | typeof TEMPLATES_FOLDER
+    | typeof TEMPLATES_ALT_FOLDER = TEMPLATES_FOLDER
 ): Promise<Templates> {
   log('extensionSrcDir:', extensionSrcDir);
-  const templatesPath: string = path.join(extensionSrcDir, TEMPLATES_FOLDER);
+  const templatesPath: string = path.join(extensionSrcDir, templateFolder);
   log('templatesPath:', templatesPath);
-  const templateFiles: string[] = await fs.promises.readdir(templatesPath);
-  return { templateFiles, templatesPath };
-
-  // return templateFiles.map((f) => new TemplateFile(f, templatesPath));
+  return getTemplates(templatesPath);
 }
 
 /** @returns user's custom templates */
@@ -94,10 +106,9 @@ async function getCustomTemplates(): Promise<Templates | undefined> {
       ? path.join(workspaceRoot, customTemplatesFolderName)
       : undefined;
 
-  if (!(templatesPath && fs.existsSync(templatesPath))) return undefined;
-
-  const templateFiles: string[] = await fs.promises.readdir(templatesPath);
-  return { templateFiles, templatesPath };
+  return templatesPath && fs.existsSync(templatesPath)
+    ? getTemplates(templatesPath)
+    : undefined;
 }
 
 /**
@@ -130,44 +141,32 @@ function templatesToTemplateFiles(templates: Templates): TemplateFile[] {
 async function getRenderTemplates(
   extensionSrcDir: string
 ): Promise<TemplateFile[]> {
-  const defaultTemplates: Templates = await getExtensionTemplates(
-    extensionSrcDir
+  let defaultTemplateFiles: TemplateFile[] = templatesToTemplateFiles(
+    await getExtensionTemplates(extensionSrcDir, TEMPLATES_FOLDER)
   );
-  const customTemplates: Templates | undefined = await getCustomTemplates();
-  const defaultTemplateFiles: TemplateFile[] =
-    templatesToTemplateFiles(defaultTemplates);
 
+  if (getSetting_defaultSpecsUseTestBed()) {
+    defaultTemplateFiles = arrayUnionOverride(
+      defaultTemplateFiles,
+      templatesToTemplateFiles(
+        await getExtensionTemplates(extensionSrcDir, TEMPLATES_ALT_FOLDER)
+      ),
+      comparatorTemplateFile
+    );
+  }
+
+  const customTemplates: Templates | undefined = await getCustomTemplates();
   if (!customTemplates) return defaultTemplateFiles;
 
   // Override and extra template Logic
   const customTemplateFiles: TemplateFile[] =
     templatesToTemplateFiles(customTemplates);
 
-  const comparator: ArrayComparator<TemplateFile> = (a, b) => a.name === b.name;
-  // Default Templates that do not have a corresponding user override
-  const nonOverridableDefaultTemplateFiles: TemplateFile[] = arrayDifference(
+  return arrayUnionOverride(
     defaultTemplateFiles,
     customTemplateFiles,
-    comparator
+    comparatorTemplateFile
   );
-  // Templates that need to be overridden
-  const overrideTemplateFiles: TemplateFile[] = arrayIntersection(
-    customTemplateFiles,
-    defaultTemplateFiles,
-    comparator
-  );
-  // Custom Templates that do not have a corresponding default template
-  const extraCustomTemplateFiles: TemplateFile[] = arrayDifference(
-    customTemplateFiles,
-    defaultTemplateFiles,
-    comparator
-  );
-
-  return [
-    ...nonOverridableDefaultTemplateFiles,
-    ...overrideTemplateFiles,
-    ...extraCustomTemplateFiles,
-  ];
 }
 
 /** @returns Filtered array based on the user selected generator option (component, module service or both component+module) */

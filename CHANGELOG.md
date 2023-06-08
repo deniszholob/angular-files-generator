@@ -2,16 +2,24 @@
 
 ## [Unreleased]
 
+## [0.0.7]
+### Added
+- New setting to toggle `TestBed` in angular spec tests
+### Changed
+- Default specs do not have the `TestBed`
+- Can toggle `defaultSpecsUseTestBed` setting to revert back to using `TestBed`
+
+
 ## [0.0.6]
 ### Added
-  - Error message popup for any errors that were encountered
+- Error message popup for any errors that were encountered
 ### Changed
-  - If there are extra custom templates that has the known file suffixes (component, service, pipe, etc..), they will be rendered as well.
+- If there are extra custom templates that has the known file suffixes (component, service, pipe, etc..), they will be rendered as well.
 
 ## [0.0.5]
 ### Added
-  - More generator options: Route, Directive, Pipe
-  - New setting options to toggle specs and stories
+- More generator options: Route, Directive, Pipe
+- New setting options to toggle specs and stories
 ### Changed
 - Template variable names to be more consistent
 

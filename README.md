@@ -31,11 +31,13 @@ If you find the extension or the source code useful, consider:
 In `.vscode/settings.json` add in the following settings to customize the extension.
 
 * `customTemplateFolder` - Custom template folder location. Path relative you your workspace root. If null will use extension default templates.
+* `defaultSpecsUseTestBed` - Toggle using default spec templates with angular TestBed or without it for better performance.
 * `generateSpec` - Toggle generation of spec files.
 * `generateStories` - Toggle generation of stories files.
 
 ```json
   "angular-files-generator.customTemplateFolder": ".vscode/ngfg-templates",
+  "angular-files-generator.defaultSpecsUseTestBed": false,
   "angular-files-generator.generateSpec": true,
   "angular-files-generator.generateStories": true,
 ```
@@ -54,14 +56,15 @@ In `.vscode/settings.json` add in the following settings to customize the extens
 
 ## Requirements
 
-Generator creates the files from custom templates, so nothing is needed to create the files.
-To use the files install
+Generator creates the files from custom templates, so **nothing is needed to create** the files!  
+However, to use the files install
 
-- [Angular](https://angular.io/docs)
-- [Jest](https://jestjs.io/docs/testing-frameworks)
-- [Storybook](https://storybook.js.org/docs/angular/get-started/introduction)
+- [Angular](https://angular.io/docs) for component code
+- [Jest](https://jestjs.io/docs/testing-frameworks) for unit testing
+- [Storybook](https://storybook.js.org/docs/angular/get-started/introduction) for visual tests/documentation
+- [ng-mocks](https://ng-mocks.sudo.eu/) recommended for helping mock services, etc.. for jest or storybook
 
-## Known Issues
+## Known Issues/Feature Requests
 
 https://github.com/deniszholob/angular-files-generator/issues
 

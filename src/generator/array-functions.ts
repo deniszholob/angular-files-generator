@@ -34,3 +34,24 @@ export function arrayDifference<T>(
 ): T[] {
   return arrA.filter((x) => !arrayIncludes(arrB, x, comparator));
 }
+
+/**
+ * If arrA=[{n="bob",a="5"},{n="alice",a="10"}]
+ * And if arrB=[{n="alice",a="11"},{n="jack",a="20"}]
+ * And if comparator=(a,b)=>a.n===b.n
+ * Then return arr=[{n="bob",a="5"},{n="alice",a="11"},{n="jack",a="20"}]
+ * @return Elements in both arrays, with similar elements in B overriding elements in A
+ */
+export function arrayUnionOverride<T>(
+  arrA: T[],
+  arrB: T[],
+  comparator: ArrayComparator<T>
+): T[] {
+  // A contains items not in B
+  const ADiffB: T[] = arrayDifference(arrA, arrB, comparator);
+  // B contains overrides for A
+  const BIntersA: T[] = arrayIntersection(arrB, arrA, comparator);
+  // B contains extra items not in A
+  const BDiffA: T[] = arrayDifference(arrB, arrA, comparator);
+  return [...ADiffB, ...BIntersA, ...BDiffA];
+}

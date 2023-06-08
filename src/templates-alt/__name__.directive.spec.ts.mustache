@@ -1,0 +1,21 @@
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+
+import { {{upperCamelCaseName}}Directive } from './{{dashCaseName}}.directive';
+
+describe('{{upperCamelCaseName}}Directive', () => {
+  let directive: {{upperCamelCaseName}}Directive;
+
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      providers: [{{upperCamelCaseName}}Directive],
+    }).compileComponents();
+  }));
+
+  beforeEach(() => {
+    directive = TestBed.inject({{upperCamelCaseName}}Directive);
+  });
+
+  it('should create', () => {
+    expect(directive).toBeTruthy();
+  });
+});
