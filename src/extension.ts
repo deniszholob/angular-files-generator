@@ -14,11 +14,9 @@ import {
   showFileNameDialog,
 } from './generator/editor';
 import {
-  arrayToStingList,
   log,
   toConstantCaseName,
   toDashCaseName,
-  toTitleCase,
   toUpperCamelCaseName,
   toUpperReadableName,
 } from './generator/formatter';
@@ -39,8 +37,8 @@ export function activate(context: vscode.ExtensionContext): void {
       // Provided implementation of commands registered in package.json
       // The commandId parameter must match the command field in package.json
       vscode.commands.registerCommand(
-        `${EXTENSION_ID}.generate${toTitleCase(type)}`,
-        (args) => generateCommand(args, type)
+        `${EXTENSION_ID}.generate${toUpperCamelCaseName(toDashCaseName(type))}`,
+        (args) => generationCommand(args, type)
       )
   );
 
@@ -53,7 +51,7 @@ export function activate(context: vscode.ExtensionContext): void {
 // This method is called when your extension is deactivated
 export function deactivate(): void {}
 
-async function generateCommand(
+async function generationCommand(
   registerCmdArgs: RegisterCmdArgs | undefined,
   ngFileType: NgFileType
 ): Promise<void> {

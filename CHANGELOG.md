@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+## [0.0.8]
+### Added
+- Standalone Component Menu Option
+### Changed
+- Settings for specs to be false, simple, testbed
+- Settings for stories to be none, CSFv2, CSFv3
+
 ## [0.0.7]
 ### Added
 - New setting to toggle `TestBed` in angular spec tests

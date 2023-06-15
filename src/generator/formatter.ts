@@ -23,7 +23,7 @@ export function arrayToStingList({
 
 /** Ex: my-wonderful-component */
 export function toDashCaseName(input: string): string {
-  return spaceToDash(input.toLocaleLowerCase().trim());
+  return underscoreToDash(spaceToDash(input.toLocaleLowerCase().trim()));
 }
 
 /** Ex: MyWonderfulComponent */
@@ -59,6 +59,11 @@ export function toCamelCase(input: string): string {
 /** Ex: my-wonderful-component */
 function spaceToDash(input: string): string {
   return input.replace(/\s/g, '-');
+}
+
+/** Ex: my-wonderful-component */
+function underscoreToDash(input: string): string {
+  return input.replace(/_/g, '-');
 }
 
 /** Ex: my wonderful component */

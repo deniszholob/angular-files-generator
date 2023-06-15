@@ -30,20 +30,28 @@ If you find the extension or the source code useful, consider:
 ## Extension Settings/Config
 In `.vscode/settings.json` add in the following settings to customize the extension.
 
-* `customTemplateFolder` - Custom template folder location. Path relative you your workspace root. If null will use extension default templates.
-* `defaultSpecsUseTestBed` - Toggle using default spec templates with angular TestBed or without it for better performance.
-* `generateSpec` - Toggle generation of spec files.
-* `generateStories` - Toggle generation of stories files.
+* `customTemplateFolder` - Custom template folder location. Path relative you your workspace root. If empty will use extension default templates.
+* `generateSpec` - Spec (Test) files can be written using basic class declarations (more performant) or using the angular test bed (More features). If unit testing, basic test structure should do fine. Can also disable tests as well.
+  * 0: Diabled
+  * 1: Simple
+  * 2: TestBed
+* `generateStories` - Storybook 6 and earlier use [Component Story Format](https://storybook.js.org/blog/storybook-csf3-is-here/) 2, Storybook 7 uses CSF 3. Can disable stories as well.
+  * 0: Disabled
+  * 2: CSF2
+  * 3: CSF3
 
+Using the json file  
 ```json
   "angular-files-generator.customTemplateFolder": ".vscode/ngfg-templates",
-  "angular-files-generator.defaultSpecsUseTestBed": false,
-  "angular-files-generator.generateSpec": true,
-  "angular-files-generator.generateStories": true,
+  "angular-files-generator.generateSpec": 1,
+  "angular-files-generator.generateStories": 3,
 ```
+Using the UI  
+  ![UI](./screenshots/angular-files-generator-settings.png)
+
 ## Custom Templates
 * Set the `customTemplateFolder` config to your custom template folder.
-* See the [default templates](https://github.com/deniszholob/angular-files-generator/tree/main/src/templates) for reference.
+* See the [default templates](https://github.com/deniszholob/angular-files-generator/tree/main/src/templates/standard) for reference.
 * File naming should be`__name__.KEYWORD.EXTENSION.mustache` where KEYWORD is one of component, module or service. EXTENSION should reflect the file type and subtype, such as `spec.ts` for typescript tests.
 * Additional files with `KEYWORD` will also be rendered.  
   Example: `__name__.component.scss.mustache` does not have a default template, but will be rendered if included in the user's custom template folder.
@@ -53,6 +61,9 @@ In `.vscode/settings.json` add in the following settings to customize the extens
   * `{{upperCamelCaseName}}` - NewModule
   * `{{constantCaseName}}` - NEW_MODULE
   * `{{upperReadableName}}` - New Module
+
+> **Note:** Overrides to `component.ts` and `module.ts` files will take precedence over internal extension templates and will yield in files in `StandaloneComponent` and `ModuleComponent`to be the same as the `Component` and `Module` Commands respectively, which may or may not matter...  
+> This should not be a problem unless using the override and creating a mix of new module and standalone components.
 
 ## Requirements
 

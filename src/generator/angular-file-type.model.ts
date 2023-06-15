@@ -1,4 +1,6 @@
 export const NG_FILE_TYPE = {
+  standalone_component: 'standalone_component',
+  module_component: 'module_component',
   module: 'module',
   service: 'service',
   component: 'component',

@@ -12,7 +12,7 @@
     "url": "https://github.com/deniszholob/angular-files-generator/issues"
   },
   "icon": "images/icon-96x96.png",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "license": "GPL-3",
   "engines": {
     "node": ">=18.12.1",
@@ -41,26 +41,47 @@
       "title": "Angular Files Generator",
       "properties": {
         "angular-files-generator.customTemplateFolder": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "default": null,
-          "description": "Custom template folder location. Path relative you your workspace root. If null will use extension default templates."
-        },
-        "angular-files-generator.defaultSpecsUseTestBed": {
-          "type": "boolean",
-          "default": false,
-          "description": "Toggle using default spec templates with angular TestBed or without it for better performance."
+          "type": "string",
+          "description": "Custom template folder location. Path relative you your workspace root. If empty; will use extension default templates."
         },
         "angular-files-generator.generateSpec": {
-          "type": "boolean",
-          "default": true,
+          "type": "integer",
+          "default": 1,
+          "enum": [
+            0,
+            1,
+            2
+          ],
+          "enumItemLabels": [
+            "False",
+            "Basic",
+            "Test Bed"
+          ],
+          "enumDescriptions": [
+            "Do not generate",
+            "Generate basic tests",
+            "Generate tests with with angular TestBed"
+          ],
           "description": "Toggle generation of spec files."
         },
         "angular-files-generator.generateStories": {
-          "type": "boolean",
-          "default": true,
+          "type": "integer",
+          "default": 3,
+          "enum": [
+            0,
+            2,
+            3
+          ],
+          "enumItemLabels": [
+            "False",
+            "CSF2",
+            "CSF3"
+          ],
+          "markdownEnumDescriptions": [
+            "Do not generate",
+            "Generate [CSF](https://storybook.js.org/blog/storybook-csf3-is-here/) version 2",
+            "Generate [CSF](https://storybook.js.org/blog/storybook-csf3-is-here/) version 3"
+          ],
           "description": "Toggle generation of stories files."
         }
       }
@@ -74,28 +95,36 @@
       ],
       "ng-generate.generate": [
         {
-          "command": "angular-files-generator.generateModule",
-          "group": "generate@1"
+          "command": "angular-files-generator.generateStandaloneComponent",
+          "group": "generate1@1"
         },
         {
-          "command": "angular-files-generator.generateComponent",
-          "group": "generate@2"
+          "command": "angular-files-generator.generateModuleComponent",
+          "group": "generate1@2"
         },
         {
           "command": "angular-files-generator.generateService",
-          "group": "generate@3"
-        },
-        {
-          "command": "angular-files-generator.generateDirective",
           "group": "generate2@1"
         },
         {
-          "command": "angular-files-generator.generatePipe",
+          "command": "angular-files-generator.generateComponent",
           "group": "generate2@2"
         },
         {
-          "command": "angular-files-generator.generateRoute",
+          "command": "angular-files-generator.generateModule",
           "group": "generate2@3"
+        },
+        {
+          "command": "angular-files-generator.generateDirective",
+          "group": "generate3@1"
+        },
+        {
+          "command": "angular-files-generator.generatePipe",
+          "group": "generate3@2"
+        },
+        {
+          "command": "angular-files-generator.generateRoute",
+          "group": "generate3@3"
         }
       ]
     },
@@ -107,7 +136,11 @@
     ],
     "commands": [
       {
-        "command": "angular-files-generator.generateModule",
+        "command": "angular-files-generator.generateStandaloneComponent",
+        "title": "Generate Standalone Component"
+      },
+      {
+        "command": "angular-files-generator.generateModuleComponent",
         "title": "Generate Module Component"
       },
       {
@@ -117,6 +150,10 @@
       {
         "command": "angular-files-generator.generateComponent",
         "title": "Generate Component"
+      },
+      {
+        "command": "angular-files-generator.generateModule",
+        "title": "Generate Module"
       },
       {
         "command": "angular-files-generator.generateDirective",
@@ -137,6 +174,8 @@
     ]
   },
   "activationEvents": [
+    "onCommand:angular-files-generator.generateStandaloneComponent",
+    "onCommand:angular-files-generator.generateModuleComponent",
     "onCommand:angular-files-generator.generateModule",
     "onCommand:angular-files-generator.generateService",
     "onCommand:angular-files-generator.generateComponent",
@@ -151,7 +190,7 @@
     "package": "npx vsce package",
     "publish": "npx vsce publish",
     "remove-output": "rimraf ./out ",
-    "template-copy": "copyfiles -f ./src/templates/**/*.mustache ./out/templates/ && copyfiles -f ./src/templates-alt/**/*.mustache ./out/templates-alt/",
+    "template-copy": "copyfiles -u 2 ./src/templates/**/*.mustache ./out/templates/",
     "compile": "npm run pre-build && tsc -p ./",
     "watch": "npm run pre-build && tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",

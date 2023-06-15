@@ -1,13 +1,18 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import {
-  AngularJsonConfig,
-  getAngularConfig,
-  getAngularPrefix,
-} from './angular-config';
+// import {
+//   AngularJsonConfig,
+//   getAngularConfig,
+//   getAngularPrefix,
+// } from './angular-config';
 import { NgFileType } from './angular-file-type.model';
-import { arrayToStingList, log } from './formatter';
+import {
+  arrayToStingList,
+  log,
+  toDashCaseName,
+  toUpperReadableName,
+} from './formatter';
 
 export interface GenerationPathInfo {
   /** Full file path
@@ -71,9 +76,10 @@ export async function showFileNameDialog(
     throw new Error('Please open a project first.');
   }
 
+  const fileTypeDashed: string = toDashCaseName(ngFileType);
   let fileName: string | undefined = await vscode.window.showInputBox({
-    prompt: `Type the name of the new ${ngFileType}`,
-    value: `my-${ngFileType}-name`,
+    prompt: `Type the name of the new ${toUpperReadableName(fileTypeDashed)}`,
+    value: `my-${fileTypeDashed}-name`,
   });
 
   if (!fileName) {

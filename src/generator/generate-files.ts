@@ -3,25 +3,21 @@ import Mustache = require('mustache');
 // import * as Mustache from 'mustache';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as vscode from 'vscode';
+import { TEMPLATES_FOLDERS, TemplateFile } from './TemplateFolders.model';
 import { TemplateVariables } from './TemplateVariables.model';
 import { NgFileType } from './angular-file-type.model';
 import { log } from './formatter';
 import {
   getSetting_customTemplateFolder,
-  getSetting_defaultSpecsUseTestBed,
   getSetting_generateSpec,
   getSetting_generateStories,
 } from './settings';
 import {
-  ArrayComparator,
-  arrayDifference,
-  arrayIntersection,
-  arrayUnionOverride,
-} from './array-functions';
+  getCustomTemplateDir,
+  getExtensionTemplateDir,
+  getTemplateFilesAndOverride,
+} from './template-ops';
 
-export const TEMPLATES_FOLDER = 'templates';
-export const TEMPLATES_ALT_FOLDER = 'templates-alt'; // Currently are alt tests using TestBed
 export interface GeneratorVariables {
   /** Ex: c:/angular-files-generator/out */
   extensionSrcDir: string;
@@ -30,21 +26,6 @@ export interface GeneratorVariables {
   /** Ex: 'Module' */
   ngFileType: NgFileType;
 }
-
-class TemplateFile {
-  public path: string;
-  constructor(public name: string, rootPath: string) {
-    this.path = path.join(rootPath, name);
-  }
-}
-
-interface Templates {
-  templatesPath: string;
-  templateFiles: string[];
-}
-
-const comparatorTemplateFile: ArrayComparator<TemplateFile> = (a, b) =>
-  a.name === b.name;
 
 /** Main generator function: Gathers template files and converts to angular files via Mustache.js */
 export async function generate(
@@ -56,7 +37,8 @@ export async function generate(
   log('Generator Variables:', generatorVariables);
 
   const templates: TemplateFile[] = await getRenderTemplates(
-    generatorVariables.extensionSrcDir
+    generatorVariables.extensionSrcDir,
+    generatorVariables.ngFileType
   );
   log('templates:', templates);
   const outputPath: string = await genOutputDirIfDoesNotExist(
@@ -74,41 +56,6 @@ export async function generate(
     filteredTemplateFiles,
     templateVariables
   );
-}
-/** @returns templates from directory */
-async function getTemplates(templatesPath: string): Promise<Templates> {
-  const templateFiles: string[] = await fs.promises.readdir(templatesPath);
-  return { templatesPath, templateFiles };
-  // return templateFiles.map((f) => new TemplateFile(f, templatesPath));
-}
-
-/** @returns extension's default templates */
-async function getExtensionTemplates(
-  extensionSrcDir: string,
-  templateFolder:
-    | typeof TEMPLATES_FOLDER
-    | typeof TEMPLATES_ALT_FOLDER = TEMPLATES_FOLDER
-): Promise<Templates> {
-  log('extensionSrcDir:', extensionSrcDir);
-  const templatesPath: string = path.join(extensionSrcDir, templateFolder);
-  log('templatesPath:', templatesPath);
-  return getTemplates(templatesPath);
-}
-
-/** @returns user's custom templates */
-async function getCustomTemplates(): Promise<Templates | undefined> {
-  const customTemplatesFolderName: string | null | undefined =
-    getSetting_customTemplateFolder();
-  const workspaceRoot: string | undefined =
-    vscode.workspace.workspaceFolders?.[0].uri.fsPath;
-  const templatesPath: string | undefined =
-    workspaceRoot && customTemplatesFolderName
-      ? path.join(workspaceRoot, customTemplatesFolderName)
-      : undefined;
-
-  return templatesPath && fs.existsSync(templatesPath)
-    ? getTemplates(templatesPath)
-    : undefined;
 }
 
 /**
@@ -130,42 +77,65 @@ async function genOutputDirIfDoesNotExist(
   return outputPath;
 }
 
-/** Object conversion */
-function templatesToTemplateFiles(templates: Templates): TemplateFile[] {
-  return templates.templateFiles.map(
-    (f) => new TemplateFile(f, templates.templatesPath)
-  );
-}
-
 /** Combines default and custom templates but overrides the defaults with custom ones */
 async function getRenderTemplates(
-  extensionSrcDir: string
+  extensionSrcDir: string,
+  ngFileType: NgFileType
 ): Promise<TemplateFile[]> {
-  let defaultTemplateFiles: TemplateFile[] = templatesToTemplateFiles(
-    await getExtensionTemplates(extensionSrcDir, TEMPLATES_FOLDER)
+  let defaultTemplateFiles: TemplateFile[] = await getTemplateFilesAndOverride(
+    [],
+    getExtensionTemplateDir(extensionSrcDir, TEMPLATES_FOLDERS.STANDARD)
   );
 
-  if (getSetting_defaultSpecsUseTestBed()) {
-    defaultTemplateFiles = arrayUnionOverride(
+  // Defaults to basic tests, if 2, replace with TestBed templates
+  const templateSpec: number | undefined = getSetting_generateSpec();
+  if (templateSpec === 2) {
+    defaultTemplateFiles = await getTemplateFilesAndOverride(
       defaultTemplateFiles,
-      templatesToTemplateFiles(
-        await getExtensionTemplates(extensionSrcDir, TEMPLATES_ALT_FOLDER)
-      ),
-      comparatorTemplateFile
+      getExtensionTemplateDir(
+        extensionSrcDir,
+        TEMPLATES_FOLDERS.SUB_SPEC_TEST_BED
+      )
     );
   }
 
-  const customTemplates: Templates | undefined = await getCustomTemplates();
-  if (!customTemplates) return defaultTemplateFiles;
+  // Defaults to CSF v3, if 2 replace with CSF v2 templates
+  const templateStories: number | undefined = getSetting_generateStories();
+  if (templateStories === 2) {
+    defaultTemplateFiles = await getTemplateFilesAndOverride(
+      defaultTemplateFiles,
+      getExtensionTemplateDir(
+        extensionSrcDir,
+        TEMPLATES_FOLDERS.SUB_STORIES_CSF_V2
+      )
+    );
+  }
 
-  // Override and extra template Logic
-  const customTemplateFiles: TemplateFile[] =
-    templatesToTemplateFiles(customTemplates);
+  // Standalone component template
+  if (ngFileType === 'standalone_component') {
+    defaultTemplateFiles = await getTemplateFilesAndOverride(
+      defaultTemplateFiles,
+      getExtensionTemplateDir(
+        extensionSrcDir,
+        TEMPLATES_FOLDERS.SUB_COMPONENT_STANDALONE
+      )
+    );
+  }
+  // Module component template
+  else if (ngFileType === 'module_component') {
+    defaultTemplateFiles = await getTemplateFilesAndOverride(
+      defaultTemplateFiles,
+      getExtensionTemplateDir(
+        extensionSrcDir,
+        TEMPLATES_FOLDERS.SUB_COMPONENT_MODULE
+      )
+    );
+  }
 
-  return arrayUnionOverride(
+  // User templates always override
+  return getTemplateFilesAndOverride(
     defaultTemplateFiles,
-    customTemplateFiles,
-    comparatorTemplateFile
+    getCustomTemplateDir(getSetting_customTemplateFolder() ?? null)
   );
 }
 
@@ -176,10 +146,16 @@ function filterTemplates(
 ): TemplateFile[] {
   let filteredTemplateFiles: TemplateFile[] = templates.filter(
     (templateFile) => {
-      return ngFileType === 'module'
-        ? templateFile.name.includes('module') ||
-            templateFile.name.includes('component')
-        : templateFile.name.includes(ngFileType);
+      if (ngFileType === 'module_component') {
+        return (
+          templateFile.name.includes('module') ||
+          templateFile.name.includes('component')
+        );
+      }
+      if (ngFileType === 'standalone_component') {
+        return templateFile.name.includes('component');
+      }
+      return templateFile.name.includes(ngFileType);
     }
   );
 
