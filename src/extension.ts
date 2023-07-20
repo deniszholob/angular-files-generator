@@ -1,11 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import {
-  AngularJsonConfig,
-  getAngularConfig,
-  getAngularPrefix,
-} from './generator/angular-config';
+import { getAngularProjectPrefix } from './generator/angular-config';
 import { NG_FILE_TYPES, NgFileType } from './generator/angular-file-type.model';
 import {
   GenerationPathInfo,
@@ -61,8 +57,7 @@ async function generationCommand(
   );
   log('Paths', paths);
 
-  const config: AngularJsonConfig | undefined = await getAngularConfig();
-  const prefix: string | undefined = await getAngularPrefix(config);
+  const prefix: string | undefined = await getAngularProjectPrefix();
   const dashCaseName: string = toDashCaseName(paths.fileName);
   await generate(
     {

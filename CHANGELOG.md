@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.0.9]
+### Changed
+- Look for project.json in addition to angular.json for nx workspaces to grab prefix setting
+- Standalone Component template: moved imports to the bottom
+- Tweak Component and Directive spec templates for instantiating
+
 ## [0.0.8]
 ### Added
 - Standalone Component Menu Option
@@ -15,7 +21,6 @@
 ### Changed
 - Default specs do not have the `TestBed`
 - Can toggle `defaultSpecsUseTestBed` setting to revert back to using `TestBed`
-
 
 ## [0.0.6]
 ### Added

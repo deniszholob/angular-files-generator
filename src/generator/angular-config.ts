@@ -7,54 +7,71 @@ export type AngularJsonConfig = {
   projects?: {
     [key: string]: ProjectConfig;
   };
+  defaultProject?: string;
 };
 
 type ProjectConfig = {
   prefix?: string;
 };
 
-type NgProject = {
+type NxProjectConfig = {
   name: string;
-  config: ProjectConfig;
+  prefix: string;
 };
 
-/** Can be angular.json or project.json if using nx
- * @deprecated use `getAngularConfigFile()` because in this function the
- * `vscode.workspace.findFiles()` will take into account the excluded files in vscode config
- * so if `angular.json` is hidden then it wont be read here
- */
-async function getAngularConfigFileAsync(): Promise<string | undefined> {
-  // https://code.visualstudio.com/api/references/vscode-api#GlobPattern
-  const configFilesGlob: string = `{${[
-    'angular.json',
-    // 'project.json',
-    // '.angular-cli.json',
-  ].reduce((acc, cur) => `${acc},**/${cur}`, '')}}`;
-  return await vscode.workspace
-    .findFiles(configFilesGlob, '{**/node_modules/*}', 1)
-    .then((files) => (files.length > 0 ? files[0].fsPath : undefined));
+function isNxConfig(
+  config: AngularJsonConfig | NxProjectConfig
+): config is NxProjectConfig {
+  return 'prefix' in config;
 }
 
-/** @returns workspace root angular.json or undefined if cant find one */
-export function getAngularConfigFile(): string | undefined {
-  const dir = vscode.workspace.workspaceFolders?.[0].uri;
+export async function getAngularProjectPrefix(): Promise<string | undefined> {
+  const config: AngularJsonConfig | NxProjectConfig | undefined =
+    await readAngularProjectConfig();
+  if (!config) return;
+  return isNxConfig(config) ? config.prefix : await getAngularPrefix(config);
+}
+
+/**
+ * @returns workspace root angular.json or undefined if cant find one
+ *  Can be angular.json
+ * or project.json if using nx
+ * or .angular-cli.json for older angular versions */
+function getProjectConfigFilePath(
+  potentialConfigFileNames: string[] = [
+    'angular.json',
+    'project.json',
+    // '.angular-cli.json',
+  ]
+): string | undefined {
+  const dir: vscode.Uri | undefined =
+    vscode.workspace.workspaceFolders?.[0].uri;
   if (!dir) return;
 
-  const configFile = path.join(dir.fsPath, `angular.json`);
-  return fs.existsSync(configFile) ? configFile : undefined;
+  const potentialConfigFiles = potentialConfigFileNames.map((name) =>
+    path.join(dir.fsPath, name)
+  );
+
+  for (const i in potentialConfigFiles) {
+    const configFilePath: string = potentialConfigFiles[i];
+    if (fs.existsSync(configFilePath)) return configFilePath;
+  }
+
+  return undefined;
 }
 
 /** @returns angular.json file contents as json*/
-export async function getAngularConfig(): Promise<
-  AngularJsonConfig | undefined
+async function readAngularProjectConfig(): Promise<
+  AngularJsonConfig | NxProjectConfig | undefined
 > {
-  const angularJsonPath: string | undefined = await getAngularConfigFile();
-  log('angularJsonPath', angularJsonPath);
+  const angularProjectConfigPath: string | undefined =
+    getProjectConfigFilePath();
+  log('angularProjectConfigPath', angularProjectConfigPath);
 
-  if (!angularJsonPath) return;
+  if (!angularProjectConfigPath) return;
 
   const angularJsonContents: string = await fs.promises.readFile(
-    angularJsonPath,
+    angularProjectConfigPath,
     'utf8'
   );
 
@@ -66,14 +83,19 @@ export async function getAngularConfig(): Promise<
 }
 
 /** @returns angular prefix for the project where user clicked in if found in angular.json, or undefined */
-export async function getAngularPrefix(
+async function getAngularPrefix(
   config?: AngularJsonConfig,
   locationPath?: string
 ): Promise<string | undefined> {
   if (!config || !config.projects) return;
 
-  const projects: NgProject[] = Object.entries(config.projects).map(
-    ([name, config]) => ({
+  type NgProjectMap = {
+    name: string;
+    config: ProjectConfig;
+  };
+
+  const projects: NgProjectMap[] = Object.entries(config.projects).map(
+    ([name, config]): NgProjectMap => ({
       name,
       config,
     })
@@ -81,7 +103,9 @@ export async function getAngularPrefix(
   if (projects.length <= 0) return;
 
   return (
-    projects.find((project) => !!locationPath?.includes(project.name)) ??
-    projects[0]
-  ).config.prefix;
+    projects.find(
+      (project) =>
+        !!(locationPath ?? config?.defaultProject)?.includes(project.name)
+    ) ?? projects[0]
+  )?.config?.prefix;
 }

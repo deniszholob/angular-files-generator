@@ -1,7 +1,11 @@
 import { {{upperCamelCaseName}}Directive } from './{{dashCaseName}}.directive';
 
 describe('{{upperCamelCaseName}}Directive', () => {
-  const directive: {{upperCamelCaseName}}Directive = new {{upperCamelCaseName}}Directive();
+  let directive: {{upperCamelCaseName}}Directive;
+
+  beforeEach(() => {
+    directive = new {{upperCamelCaseName}}Directive();
+  });
 
   it('should create', () => {
     expect(directive).toBeTruthy();
