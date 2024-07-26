@@ -7,10 +7,11 @@ export enum TemplateType {
   component = 'component',
   directive = 'directive',
   pipe = 'pipe',
- route = 'route',
+  route = 'route',
   util = 'util',
   model = 'model',
   enum = 'enum',
 }
 
-export const TEMPLATE_TYPE_OPTIONS: TemplateType[] = Object.values(TemplateType);
+export const TEMPLATE_TYPE_OPTIONS: TemplateType[] =
+  Object.values(TemplateType);

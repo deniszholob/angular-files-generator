@@ -3,7 +3,10 @@ import Mustache = require('mustache');
 // import * as Mustache from 'mustache';
 import * as fs from 'fs';
 import * as path from 'path';
-import { TEMPLATES_FOLDERS, TemplateFile } from './template-ops/TemplateFolders.model';
+import {
+  TEMPLATES_FOLDERS,
+  TemplateFile,
+} from './template-ops/TemplateFolders.model';
 import { TemplateVariables } from './template-ops/TemplateVariables.model';
 import { TemplateType } from './template-type.enum';
 import { log } from '../util/formatter.util';
@@ -37,7 +40,7 @@ export enum GenerationStatus {
 
 export interface GenerationResponse {
   status: GenerationStatus;
-  filesAlreadyExist:string[];
+  filesAlreadyExist: string[];
 }
 
 /** Main generator function: Gathers template files and converts to angular files via Mustache.js */
@@ -68,9 +71,7 @@ export async function generate(
   // e.g. clicked-dir/my-model.model.ts
   const outputPath: string = await genOutputDirIfDoesNotExist(
     generatorVariables.outputDir,
-    filteredTemplateFiles.length <=1
-      ? ''
-      : templateVariables.dashCaseName
+    filteredTemplateFiles.length <= 1 ? '' : templateVariables.dashCaseName
   );
 
   return await renderTemplates(
@@ -165,19 +166,18 @@ async function getRenderTemplates(
 function filterTemplates(
   templates: TemplateFile[],
   templateType: TemplateType,
-  customType: string,
+  customType: string
 ): TemplateFile[] {
   let filteredTemplateFiles: TemplateFile[] = templates.filter(
-    (templateFile:TemplateFile):boolean => {
-
+    (templateFile: TemplateFile): boolean => {
       if (templateType === TemplateType.custom_type) {
-        const strippedName:string = templateFile.name
+        const strippedName: string = templateFile.name
           .replace('.mustache', '')
           .replace('__name__', '');
-        const dotSplit:string[] = strippedName.split('.');
+        const dotSplit: string[] = strippedName.split('.');
         return dotSplit.length > 2
           ? dotSplit.at(1) == customType
-          : dotSplit.at(0) == customType
+          : dotSplit.at(0) == customType;
       }
 
       if (templateType === TemplateType.module_component) {
@@ -197,13 +197,13 @@ function filterTemplates(
 
   if (!getSetting_generateSpec()) {
     filteredTemplateFiles = filteredTemplateFiles.filter(
-      (tf:TemplateFile):boolean => !tf.name.includes('.spec.ts')
+      (tf: TemplateFile): boolean => !tf.name.includes('.spec.ts')
     );
   }
 
   if (!getSetting_generateStories()) {
     filteredTemplateFiles = filteredTemplateFiles.filter(
-      (tf:TemplateFile):boolean  => !tf.name.includes('.stories.ts')
+      (tf: TemplateFile): boolean => !tf.name.includes('.stories.ts')
     );
   }
   return filteredTemplateFiles;
@@ -219,7 +219,7 @@ async function renderTemplates(
   const response: GenerationResponse = {
     filesAlreadyExist,
     status: GenerationStatus.noTemplatesFound,
-  }
+  };
 
   if (templateFiles.length <= 0) return response;
 
@@ -250,9 +250,10 @@ async function renderTemplates(
     }
   }
 
-  response.status = filesAlreadyExist.length > 0
-  ? GenerationStatus.filesAlreadyExist
-  : GenerationStatus.success;
+  response.status =
+    filesAlreadyExist.length > 0
+      ? GenerationStatus.filesAlreadyExist
+      : GenerationStatus.success;
 
   return response;
 }

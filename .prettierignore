@@ -3,7 +3,7 @@ out
 /.vscode-test
 
 # Markdown
-#*.md
+*.md
 
 #Misc
 /node_modules
