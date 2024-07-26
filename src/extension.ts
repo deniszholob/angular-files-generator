@@ -2,7 +2,10 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { getAngularProjectPrefix } from './generator/angular-config';
-import { TemplateType, TEMPLATE_TYPE_OPTIONS } from './generator/template-type.enum';
+import {
+  TemplateType,
+  TEMPLATE_TYPE_OPTIONS,
+} from './generator/template-type.enum';
 import {
   GenerationPathInfo,
   displayNotGeneratedFilesMessage,
@@ -18,7 +21,12 @@ import {
   toUpperCamelCaseName,
   toUpperReadableName,
 } from './util/formatter.util';
-import { GenerationResponse, GenerationStatus, GeneratorVariables, generate } from './generator/generate-files';
+import {
+  GenerationResponse,
+  GenerationStatus,
+  GeneratorVariables,
+  generate,
+} from './generator/generate-files';
 import { TemplateVariables } from './generator/template-ops/TemplateVariables.model';
 
 type RegisterCmdArgs = { fsPath: string };
@@ -37,10 +45,10 @@ export function activate(context: vscode.ExtensionContext): void {
       // The commandId parameter must match the command field in package.json
       vscode.commands.registerCommand(
         `${EXTENSION_ID}.generate${toUpperCamelCaseName(toDashCaseName(type))}`,
-        (args) => generationCommand(args, type)
-        .catch((e:unknown):void => {
-          vscode.window.showErrorMessage(String(e));
-        })
+        (args) =>
+          generationCommand(args, type).catch((e: unknown): void => {
+            vscode.window.showErrorMessage(String(e));
+          })
       )
   );
 
@@ -60,7 +68,7 @@ async function generationCommand(
   const paths: GenerationPathInfo = await showFileNameDialog(
     templateType,
     registerCmdArgs?.fsPath
-  )
+  );
   log('Paths', paths);
 
   const prefix: string | undefined = await getAngularProjectPrefix();
@@ -82,21 +90,21 @@ async function generationCommand(
       customType: paths.customType,
     } satisfies GeneratorVariables
   )
-    .then((response: GenerationResponse):void => {
+    .then((response: GenerationResponse): void => {
       switch (response.status) {
         case GenerationStatus.filesAlreadyExist: {
           displayNotGeneratedFilesMessage(response.filesAlreadyExist);
-        };
+        }
         case GenerationStatus.noTemplatesFound: {
           displayNothingToGenerateMessage(templateType);
-        };
+        }
         case GenerationStatus.success:
         default: {
           displaySuccessMessage(templateType, dashCaseName);
-        };
+        }
       }
     })
-    .catch((e:unknown):void => {
+    .catch((e: unknown): void => {
       vscode.window.showErrorMessage(String(e));
     });
 }

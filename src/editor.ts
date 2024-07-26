@@ -43,7 +43,7 @@ export function displaySuccessMessage(
   vscode.window.setStatusBarMessage(message, timeout);
 }
 
-export function displayNothingToGenerateMessage(templateType:string): void {
+export function displayNothingToGenerateMessage(templateType: string): void {
   const message: string = `No templates for ${templateType}`;
   log(message);
   vscode.window.showInformationMessage(message);
@@ -108,9 +108,9 @@ export async function showFileNameDialog(
   }
   // const dirPath: string = path.join(rootPath, dirName);
 
-  let customType: string|undefined;
-  if(templateType === TemplateType.custom_type){
-    customType = await showCustomTypeDialog() ?? ''
+  let customType: string | undefined;
+  if (templateType === TemplateType.custom_type) {
+    customType = (await showCustomTypeDialog()) ?? '';
   }
 
   return {
@@ -119,7 +119,7 @@ export async function showFileNameDialog(
     // dirName,
     // dirPath,
     rootPath,
-    customType: customType ?? ''
+    customType: customType ?? '',
   };
 }
 
