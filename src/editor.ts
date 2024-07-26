@@ -6,13 +6,13 @@ import * as vscode from 'vscode';
 //   getAngularConfig,
 //   getAngularPrefix,
 // } from './angular-config';
-import { NgFileType } from './generator/angular-file-type.model';
+import { TemplateType } from './generator/template-type.enum';
 import {
   arrayToStingList,
   log,
   toDashCaseName,
   toUpperReadableName,
-} from './util/formatter';
+} from './util/formatter.util';
 
 export interface GenerationPathInfo {
   /** Full file path
@@ -50,7 +50,7 @@ export function displayNotGeneratedFilesMessage(files: string[]): void {
   vscode.window.showInformationMessage(message);
 }
 export async function showFileNameDialog(
-  ngFileType: NgFileType,
+  templateType: TemplateType,
   clickedFolderPath?: string
 ): Promise<GenerationPathInfo> {
   if (!clickedFolderPath) {
@@ -76,7 +76,7 @@ export async function showFileNameDialog(
     throw new Error('Please open a project first.');
   }
 
-  const fileTypeDashed: string = toDashCaseName(ngFileType);
+  const fileTypeDashed: string = toDashCaseName(templateType);
   let fileName: string | undefined = await vscode.window.showInputBox({
     prompt: `Type the name of the new ${toUpperReadableName(fileTypeDashed)}`,
     value: `my-${fileTypeDashed}-name`,

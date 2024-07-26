@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { getAngularProjectPrefix } from './generator/angular-config';
-import { NG_FILE_TYPES, NgFileType } from './generator/angular-file-type.model';
+import { TemplateType, TEMPLATE_TYPE_OPTIONS } from './generator/template-type.enum';
 import {
   GenerationPathInfo,
   displayNotGeneratedFilesMessage,
@@ -15,7 +15,7 @@ import {
   toDashCaseName,
   toUpperCamelCaseName,
   toUpperReadableName,
-} from './util/formatter';
+} from './util/formatter.util';
 import { generate } from './generator/generate-files';
 
 type RegisterCmdArgs = { fsPath: string };
@@ -28,8 +28,8 @@ const DEFAULT_ANGULAR_PREFIX = 'app';
  * Commands need to be defined in the package.json file
  */
 export function activate(context: vscode.ExtensionContext): void {
-  const generatorCommands: vscode.Disposable[] = NG_FILE_TYPES.map(
-    (type: NgFileType): vscode.Disposable =>
+  const generatorCommands: vscode.Disposable[] = TEMPLATE_TYPE_OPTIONS.map(
+    (type: TemplateType): vscode.Disposable =>
       // Provided implementation of commands registered in package.json
       // The commandId parameter must match the command field in package.json
       vscode.commands.registerCommand(
@@ -49,10 +49,10 @@ export function deactivate(): void {}
 
 async function generationCommand(
   registerCmdArgs: RegisterCmdArgs | undefined,
-  ngFileType: NgFileType
+  templateType: TemplateType
 ): Promise<void> {
   const paths: GenerationPathInfo = await showFileNameDialog(
-    ngFileType,
+    templateType,
     registerCmdArgs?.fsPath
   );
   log('Paths', paths);
@@ -70,14 +70,14 @@ async function generationCommand(
     {
       extensionSrcDir: __dirname,
       outputDir: paths.rootPath,
-      ngFileType,
+      templateType: templateType,
     }
   )
     .then((filesAlreadyExist: string[]) => {
       if (filesAlreadyExist.length) {
         displayNotGeneratedFilesMessage(filesAlreadyExist);
       }
-      displaySuccessMessage(ngFileType, dashCaseName);
+      displaySuccessMessage(templateType, dashCaseName);
     })
     .catch((e) => {
       vscode.window.showErrorMessage(String(e));
