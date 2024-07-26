@@ -5,8 +5,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { TEMPLATES_FOLDERS, TemplateFile } from './template-ops/TemplateFolders.model';
 import { TemplateVariables } from './template-ops/TemplateVariables.model';
-import { NgFileType } from './angular-file-type.model';
-import { log } from '../util/formatter';
+import { TemplateType } from './template-type.enum';
+import { log } from '../util/formatter.util';
 import {
   getSetting_customTemplateFolder,
   getSetting_generateSpec,
@@ -24,7 +24,7 @@ export interface GeneratorVariables {
   /** Ex: c:/right/click/dir */
   outputDir: string;
   /** Ex: 'Module' */
-  ngFileType: NgFileType;
+  templateType: TemplateType;
 }
 
 /** Main generator function: Gathers template files and converts to angular files via Mustache.js */
@@ -38,13 +38,13 @@ export async function generate(
 
   const templates: TemplateFile[] = await getRenderTemplates(
     generatorVariables.extensionSrcDir,
-    generatorVariables.ngFileType
+    generatorVariables.templateType
   );
   log('templates:', templates);
 
   const filteredTemplateFiles: TemplateFile[] = filterTemplates(
     templates,
-    generatorVariables.ngFileType
+    generatorVariables.templateType
   );
   log('filteredTemplateFiles:', filteredTemplateFiles);
 
@@ -88,7 +88,7 @@ async function genOutputDirIfDoesNotExist(
 /** Combines default and custom templates but overrides the defaults with custom ones */
 async function getRenderTemplates(
   extensionSrcDir: string,
-  ngFileType: NgFileType
+  templateType: TemplateType
 ): Promise<TemplateFile[]> {
   let defaultTemplateFiles: TemplateFile[] = await getTemplateFilesAndOverride(
     [],
@@ -120,7 +120,7 @@ async function getRenderTemplates(
   }
 
   // Standalone component template
-  if (ngFileType === 'standalone_component') {
+  if (templateType === 'standalone_component') {
     defaultTemplateFiles = await getTemplateFilesAndOverride(
       defaultTemplateFiles,
       getExtensionTemplateDir(
@@ -130,7 +130,7 @@ async function getRenderTemplates(
     );
   }
   // Module component template
-  else if (ngFileType === 'module_component') {
+  else if (templateType === 'module_component') {
     defaultTemplateFiles = await getTemplateFilesAndOverride(
       defaultTemplateFiles,
       getExtensionTemplateDir(
@@ -150,20 +150,20 @@ async function getRenderTemplates(
 /** @returns Filtered array based on the user selected generator option (component, module service or both component+module) */
 function filterTemplates(
   templates: TemplateFile[],
-  ngFileType: NgFileType
+  templateType: TemplateType
 ): TemplateFile[] {
   let filteredTemplateFiles: TemplateFile[] = templates.filter(
     (templateFile) => {
-      if (ngFileType === 'module_component') {
+      if (templateType === TemplateType.module_component) {
         return (
-          templateFile.name.includes('module') ||
-          templateFile.name.includes('component')
+          templateFile.name.includes(TemplateType.module) ||
+          templateFile.name.includes(TemplateType.component)
         );
       }
-      if (ngFileType === 'standalone_component') {
-        return templateFile.name.includes('component');
+      if (templateType === TemplateType.standalone_component) {
+        return templateFile.name.includes(TemplateType.component);
       }
-      return templateFile.name.includes(ngFileType);
+      return templateFile.name.includes(templateType);
     }
   );
 

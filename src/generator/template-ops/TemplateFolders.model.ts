@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { ArrayComparator } from '../../util/array-functions';
+import { ArrayComparator } from '../../util/array.util';
 
 export const TEMPLATES_FOLDERS = {
   STANDARD: 'templates/standard',

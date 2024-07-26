@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { log } from '../util/formatter';
+import { log } from '../util/formatter.util';
 
 /** angular.json */
 type AngularJsonConfig = {

@@ -5,11 +5,9 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "explorer.sortOrderLexicographicOptions": "lower", // Case sensitive file ordering in tree
   "workbench.iconTheme": "material-icon-theme",
+  "material-icon-theme.activeIconPack": "angular_ngrx",
   "explorer.autoRevealExclude": {
     "**/node_modules": true
-  },
-  "material-icon-theme.folders.associations": {
-    "templates-alt": "template"
   },
   "files.exclude": {
     ".husky": true,
