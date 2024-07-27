@@ -14,6 +14,7 @@ import {
   getSetting_customTemplateFolder,
   getSetting_generateSpec,
   getSetting_generateStories,
+  getSetting_useOnlyCustomTemplates,
 } from '../settings';
 import {
   getCustomTemplateDir,
@@ -105,54 +106,60 @@ async function getRenderTemplates(
   extensionSrcDir: string,
   templateType: TemplateType
 ): Promise<TemplateFile[]> {
-  let defaultTemplateFiles: TemplateFile[] = await getTemplateFilesAndOverride(
-    [],
-    getExtensionTemplateDir(extensionSrcDir, TEMPLATES_FOLDERS.STANDARD)
-  );
+  let defaultTemplateFiles: TemplateFile[] = [];
 
-  // Defaults to basic tests, if 2, replace with TestBed templates
-  const templateSpec: number | undefined = getSetting_generateSpec();
-  if (templateSpec === 2) {
-    defaultTemplateFiles = await getTemplateFilesAndOverride(
-      defaultTemplateFiles,
-      getExtensionTemplateDir(
-        extensionSrcDir,
-        TEMPLATES_FOLDERS.SUB_SPEC_TEST_BED
-      )
-    );
-  }
+  const useDefaultTemplates: boolean = !getSetting_useOnlyCustomTemplates();
 
-  // Defaults to CSF v3, if 2 replace with CSF v2 templates
-  const templateStories: number | undefined = getSetting_generateStories();
-  if (templateStories === 2) {
+  if (useDefaultTemplates) {
     defaultTemplateFiles = await getTemplateFilesAndOverride(
-      defaultTemplateFiles,
-      getExtensionTemplateDir(
-        extensionSrcDir,
-        TEMPLATES_FOLDERS.SUB_STORIES_CSF_V2
-      )
+      [],
+      getExtensionTemplateDir(extensionSrcDir, TEMPLATES_FOLDERS.STANDARD)
     );
-  }
 
-  // Standalone component template
-  if (templateType === 'standalone_component') {
-    defaultTemplateFiles = await getTemplateFilesAndOverride(
-      defaultTemplateFiles,
-      getExtensionTemplateDir(
-        extensionSrcDir,
-        TEMPLATES_FOLDERS.SUB_COMPONENT_STANDALONE
-      )
-    );
-  }
-  // Module component template
-  else if (templateType === 'module_component') {
-    defaultTemplateFiles = await getTemplateFilesAndOverride(
-      defaultTemplateFiles,
-      getExtensionTemplateDir(
-        extensionSrcDir,
-        TEMPLATES_FOLDERS.SUB_COMPONENT_MODULE
-      )
-    );
+    // Defaults to basic tests, if 2, replace with TestBed templates
+    const templateSpec: number | undefined = getSetting_generateSpec();
+    if (templateSpec === 2) {
+      defaultTemplateFiles = await getTemplateFilesAndOverride(
+        defaultTemplateFiles,
+        getExtensionTemplateDir(
+          extensionSrcDir,
+          TEMPLATES_FOLDERS.SUB_SPEC_TEST_BED
+        )
+      );
+    }
+
+    // Defaults to CSF v3, if 2 replace with CSF v2 templates
+    const templateStories: number | undefined = getSetting_generateStories();
+    if (templateStories === 2) {
+      defaultTemplateFiles = await getTemplateFilesAndOverride(
+        defaultTemplateFiles,
+        getExtensionTemplateDir(
+          extensionSrcDir,
+          TEMPLATES_FOLDERS.SUB_STORIES_CSF_V2
+        )
+      );
+    }
+
+    // Standalone component template
+    if (templateType === 'standalone_component') {
+      defaultTemplateFiles = await getTemplateFilesAndOverride(
+        defaultTemplateFiles,
+        getExtensionTemplateDir(
+          extensionSrcDir,
+          TEMPLATES_FOLDERS.SUB_COMPONENT_STANDALONE
+        )
+      );
+    }
+    // Module component template
+    else if (templateType === 'module_component') {
+      defaultTemplateFiles = await getTemplateFilesAndOverride(
+        defaultTemplateFiles,
+        getExtensionTemplateDir(
+          extensionSrcDir,
+          TEMPLATES_FOLDERS.SUB_COMPONENT_MODULE
+        )
+      );
+    }
   }
 
   // User templates always override

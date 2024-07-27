@@ -31,8 +31,9 @@ If you find the extension or the source code useful, consider:
 In `.vscode/settings.json` add in the following settings to customize the extension.
 
 * `customTemplateFolder` - Custom template folder location. Path relative you your workspace root. If empty will use extension default templates.
+* `useOnlyCustomTemplates` - Generate code only from custom templates folder. No build in defaults are used.
 * `generateSpec` - Spec (Test) files can be written using basic class declarations (more performant) or using the angular test bed (More features). If unit testing, basic test structure should do fine. Can also disable tests as well.
-  * 0: Diabled
+  * 0: Disabled
   * 1: Simple
   * 2: TestBed
 * `generateStories` - Storybook 6 and earlier use [Component Story Format](https://storybook.js.org/blog/storybook-csf3-is-here/) 2, Storybook 7 uses CSF 3. Can disable stories as well.
@@ -43,6 +44,7 @@ In `.vscode/settings.json` add in the following settings to customize the extens
 Using the json file  
 ```json
   "angular-files-generator.customTemplateFolder": ".vscode/ngfg-templates",
+  "angular-files-generator.useOnlyCustomTemplates": false,
   "angular-files-generator.generateSpec": 1,
   "angular-files-generator.generateStories": 3,
 ```

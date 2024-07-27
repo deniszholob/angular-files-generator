@@ -6,6 +6,7 @@
 ### Added
 - Support for custom template types
 - util, model, enum templates/menu options
+- Setting for only using the custom templates
 ### Changed
 - Storybook template: Update types for latest SB and add some argType common boilerplate
 - Component template: Add style display:contents as a comment
