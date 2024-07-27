@@ -44,6 +44,11 @@
           "type": "string",
           "description": "Custom template folder location. Path relative you your workspace root. If empty; will use extension default templates."
         },
+        "angular-files-generator.useOnlyCustomTemplates": {
+          "type": "boolean",
+          "description": "Generate code only from custom templates folder. No build in defaults are used.",
+          "default": false
+        },
         "angular-files-generator.generateSpec": {
           "type": "integer",
           "default": 1,
