@@ -137,6 +137,10 @@
         {
           "command": "angular-files-generator.generateEnum",
           "group": "generate4@3"
+        },
+        {
+          "command": "angular-files-generator.generateCustomType",
+          "group": "generate5@1"
         }
       ]
     },
@@ -192,6 +196,10 @@
         "title": "Generate Enum"
       },
       {
+        "command": "angular-files-generator.generateCustomType",
+        "title": "Generate Custom"
+      },
+      {
         "command": "angular-files-generator.test",
         "title": "Test Command"
       }
@@ -209,6 +217,7 @@
     "onCommand:angular-files-generator.generateUtil",
     "onCommand:angular-files-generator.generateModel",
     "onCommand:angular-files-generator.generateEnum",
+    "onCommand:angular-files-generator.generateCustomType",
     "onCommand:angular-files-generator.test"
   ],
   "main": "./out/extension.js",
