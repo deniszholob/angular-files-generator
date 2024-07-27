@@ -12,7 +12,7 @@
     "url": "https://github.com/deniszholob/angular-files-generator/issues"
   },
   "icon": "images/icon-96x96.png",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "license": "GPL-3",
   "engines": {
     "node": ">=18.12.1",
@@ -125,6 +125,18 @@
         {
           "command": "angular-files-generator.generateRoute",
           "group": "generate3@3"
+        },
+        {
+          "command": "angular-files-generator.generateUtil",
+          "group": "generate4@1"
+        },
+        {
+          "command": "angular-files-generator.generateModel",
+          "group": "generate4@2"
+        },
+        {
+          "command": "angular-files-generator.generateEnum",
+          "group": "generate4@3"
         }
       ]
     },
@@ -168,6 +180,18 @@
         "title": "Generate Route"
       },
       {
+        "command": "angular-files-generator.generateUtil",
+        "title": "Generate Utility"
+      },
+      {
+        "command": "angular-files-generator.generateModel",
+        "title": "Generate Model"
+      },
+      {
+        "command": "angular-files-generator.generateEnum",
+        "title": "Generate Enum"
+      },
+      {
         "command": "angular-files-generator.test",
         "title": "Test Command"
       }
@@ -182,6 +206,9 @@
     "onCommand:angular-files-generator.generateDirective",
     "onCommand:angular-files-generator.generatePipe",
     "onCommand:angular-files-generator.generateRoute",
+    "onCommand:angular-files-generator.generateUtil",
+    "onCommand:angular-files-generator.generateModel",
+    "onCommand:angular-files-generator.generateEnum",
     "onCommand:angular-files-generator.test"
   ],
   "main": "./out/extension.js",

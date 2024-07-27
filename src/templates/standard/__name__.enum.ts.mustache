@@ -1,0 +1,9 @@
+export enum {{upperCamelCaseName}} {
+  'option1'= 'option1',
+}
+
+export const {{constantCaseName}}_OPTIONS: {{upperCamelCaseName}}[] = Object.values({{upperCamelCaseName}});
+
+export const {{constantCaseName}}_DISPLAY: Record<{{upperCamelCaseName}}, string> = {
+  [{{upperCamelCaseName}}.option1]: 'Option 1',
+};

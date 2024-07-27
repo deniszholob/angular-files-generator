@@ -79,6 +79,9 @@ However, to use the files install
 
 https://github.com/deniszholob/angular-files-generator/issues
 
+## Versioning Pattern
+0.0.0 = major.minor.patch = breaking changes.new features.bug fixes
+
 ## Downloads
 
 - [Github](https://github.com/deniszholob/angular-files-generator/releases)

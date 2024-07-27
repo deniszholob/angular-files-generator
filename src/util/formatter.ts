@@ -21,6 +21,17 @@ export function arrayToStingList({
     : '';
 }
 
+
+/** Ex: My wonderful component */
+export function toTitleCase(input: string): string {
+  return input.charAt(0).toUpperCase() + input.slice(1).toLowerCase();
+}
+
+/** Ex: my Wonderful Component */
+export function toWordCase(input: string): string {
+  return input.replace(/\w\S*/g, toTitleCase);
+}
+
 /** Ex: my-wonderful-component */
 export function toDashCaseName(input: string): string {
   return underscoreToDash(spaceToDash(input.toLocaleLowerCase().trim()));
@@ -39,16 +50,6 @@ export function toUpperReadableName(input: string): string {
 /** Ex: MY_WONDERFUL_COMPONENT */
 export function toConstantCaseName(input: string): string {
   return dashToUnderscore(input.toUpperCase());
-}
-
-/** Ex: My wonderful component */
-export function toTitleCase(input: string): string {
-  return input.charAt(0).toUpperCase() + input.slice(1).toLowerCase();
-}
-
-/** Ex: my Wonderful Component */
-export function toWordCase(input: string): string {
-  return input.replace(/\w\S*/g, toTitleCase);
 }
 
 /** Ex: myWonderfulComponent */

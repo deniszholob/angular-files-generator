@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [0.1.0]
+### Added
+- util, model, enum templates/menu options
+### Changed
+- Storybook template: Update types for latest SB and add some argType common boilerplate
+- Component template: Add style display:contents as a comment
+- Service template: Add providedIn: 'root'
+
 ## [0.0.9]
 ### Changed
 - Look for project.json in addition to angular.json for nx workspaces to grab prefix setting

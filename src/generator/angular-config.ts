@@ -1,9 +1,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { log } from './formatter';
+import { log } from '../util/formatter';
 
-export type AngularJsonConfig = {
+/** angular.json */
+type AngularJsonConfig = {
   projects?: {
     [key: string]: ProjectConfig;
   };
@@ -14,6 +15,7 @@ type ProjectConfig = {
   prefix?: string;
 };
 
+/** project.json */
 type NxProjectConfig = {
   name: string;
   prefix: string;
