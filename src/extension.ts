@@ -6,17 +6,20 @@ import { TemplateType, TEMPLATE_TYPE_OPTIONS } from './generator/template-type.e
 import {
   GenerationPathInfo,
   displayNotGeneratedFilesMessage,
+  displayNothingToGenerateMessage,
   displaySuccessMessage,
   showFileNameDialog,
 } from './editor';
 import {
   log,
+  toCamelCase,
   toConstantCaseName,
   toDashCaseName,
   toUpperCamelCaseName,
   toUpperReadableName,
 } from './util/formatter.util';
-import { generate } from './generator/generate-files';
+import { GenerationResponse, GenerationStatus, GeneratorVariables, generate } from './generator/generate-files';
+import { TemplateVariables } from './generator/template-ops/TemplateVariables.model';
 
 type RegisterCmdArgs = { fsPath: string };
 const EXTENSION_ID = 'angular-files-generator';
@@ -35,6 +38,9 @@ export function activate(context: vscode.ExtensionContext): void {
       vscode.commands.registerCommand(
         `${EXTENSION_ID}.generate${toUpperCamelCaseName(toDashCaseName(type))}`,
         (args) => generationCommand(args, type)
+        .catch((e:unknown):void => {
+          vscode.window.showErrorMessage(String(e));
+        })
       )
   );
 
@@ -54,7 +60,7 @@ async function generationCommand(
   const paths: GenerationPathInfo = await showFileNameDialog(
     templateType,
     registerCmdArgs?.fsPath
-  );
+  )
   log('Paths', paths);
 
   const prefix: string | undefined = await getAngularProjectPrefix();
@@ -63,23 +69,34 @@ async function generationCommand(
     {
       componentPrefix: prefix ?? DEFAULT_ANGULAR_PREFIX,
       dashCaseName,
+      camelCaseName: toCamelCase(dashCaseName),
       upperCamelCaseName: toUpperCamelCaseName(dashCaseName),
       constantCaseName: toConstantCaseName(dashCaseName),
       upperReadableName: toUpperReadableName(dashCaseName),
-    },
+      type: paths.customType,
+    } satisfies TemplateVariables,
     {
       extensionSrcDir: __dirname,
       outputDir: paths.rootPath,
       templateType: templateType,
-    }
+      customType: paths.customType,
+    } satisfies GeneratorVariables
   )
-    .then((filesAlreadyExist: string[]) => {
-      if (filesAlreadyExist.length) {
-        displayNotGeneratedFilesMessage(filesAlreadyExist);
+    .then((response: GenerationResponse):void => {
+      switch (response.status) {
+        case GenerationStatus.filesAlreadyExist: {
+          displayNotGeneratedFilesMessage(response.filesAlreadyExist);
+        };
+        case GenerationStatus.noTemplatesFound: {
+          displayNothingToGenerateMessage(templateType);
+        };
+        case GenerationStatus.success:
+        default: {
+          displaySuccessMessage(templateType, dashCaseName);
+        };
       }
-      displaySuccessMessage(templateType, dashCaseName);
     })
-    .catch((e) => {
+    .catch((e:unknown):void => {
       vscode.window.showErrorMessage(String(e));
     });
 }

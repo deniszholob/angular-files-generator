@@ -1,4 +1,5 @@
 export enum TemplateType {
+  custom_type = 'custom_type',
   standalone_component = 'standalone_component',
   module_component = 'module_component',
   module = 'module',

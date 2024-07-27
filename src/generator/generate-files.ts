@@ -25,13 +25,26 @@ export interface GeneratorVariables {
   outputDir: string;
   /** Ex: 'Module' */
   templateType: TemplateType;
+  /** Used with TemplateType.custom_type, will otherwise be '' */
+  customType: string;
+}
+
+export enum GenerationStatus {
+  'success' = 'success',
+  'filesAlreadyExist' = 'filesAlreadyExist',
+  'noTemplatesFound' = 'noTemplatesFound',
+}
+
+export interface GenerationResponse {
+  status: GenerationStatus;
+  filesAlreadyExist:string[];
 }
 
 /** Main generator function: Gathers template files and converts to angular files via Mustache.js */
 export async function generate(
   templateVariables: TemplateVariables,
   generatorVariables: GeneratorVariables
-): Promise<string[]> {
+): Promise<GenerationResponse> {
   log(`Generating into ${generatorVariables.outputDir}`);
   log('Template Variables:', templateVariables);
   log('Generator Variables:', generatorVariables);
@@ -44,7 +57,8 @@ export async function generate(
 
   const filteredTemplateFiles: TemplateFile[] = filterTemplates(
     templates,
-    generatorVariables.templateType
+    generatorVariables.templateType,
+    generatorVariables.customType
   );
   log('filteredTemplateFiles:', filteredTemplateFiles);
 
@@ -150,32 +164,46 @@ async function getRenderTemplates(
 /** @returns Filtered array based on the user selected generator option (component, module service or both component+module) */
 function filterTemplates(
   templates: TemplateFile[],
-  templateType: TemplateType
+  templateType: TemplateType,
+  customType: string,
 ): TemplateFile[] {
   let filteredTemplateFiles: TemplateFile[] = templates.filter(
-    (templateFile) => {
+    (templateFile:TemplateFile):boolean => {
+
+      if (templateType === TemplateType.custom_type) {
+        const strippedName:string = templateFile.name
+          .replace('.mustache', '')
+          .replace('__name__', '');
+        const dotSplit:string[] = strippedName.split('.');
+        return dotSplit.length > 2
+          ? dotSplit.at(1) == customType
+          : dotSplit.at(0) == customType
+      }
+
       if (templateType === TemplateType.module_component) {
         return (
           templateFile.name.includes(TemplateType.module) ||
           templateFile.name.includes(TemplateType.component)
         );
       }
+
       if (templateType === TemplateType.standalone_component) {
         return templateFile.name.includes(TemplateType.component);
       }
+
       return templateFile.name.includes(templateType);
     }
   );
 
   if (!getSetting_generateSpec()) {
     filteredTemplateFiles = filteredTemplateFiles.filter(
-      (tf) => !tf.name.includes('.spec.ts')
+      (tf:TemplateFile):boolean => !tf.name.includes('.spec.ts')
     );
   }
 
   if (!getSetting_generateStories()) {
     filteredTemplateFiles = filteredTemplateFiles.filter(
-      (tf) => !tf.name.includes('.stories.ts')
+      (tf:TemplateFile):boolean  => !tf.name.includes('.stories.ts')
     );
   }
   return filteredTemplateFiles;
@@ -186,8 +214,15 @@ async function renderTemplates(
   outputPath: string,
   templateFiles: TemplateFile[],
   templateVariables: TemplateVariables
-): Promise<string[]> {
+): Promise<GenerationResponse> {
   const filesAlreadyExist: string[] = [];
+  const response: GenerationResponse = {
+    filesAlreadyExist,
+    status: GenerationStatus.noTemplatesFound,
+  }
+
+  if (templateFiles.length <= 0) return response;
+
   // Render each template out
   for (const templateFile of templateFiles) {
     const outputFileName: string = templateFile.name
@@ -214,5 +249,10 @@ async function renderTemplates(
       filesAlreadyExist.push(outputFileName);
     }
   }
-  return filesAlreadyExist;
+
+  response.status = filesAlreadyExist.length > 0
+  ? GenerationStatus.filesAlreadyExist
+  : GenerationStatus.success;
+
+  return response;
 }

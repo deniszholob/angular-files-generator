@@ -30,16 +30,23 @@ export interface GenerationPathInfo {
   /** Target root path
    * Ex: c:/target */
   rootPath: string;
+  customType: string;
 }
 
 export function displaySuccessMessage(
   type: string,
   name: string,
-  timeout = 2000
+  timeout = 5000
 ): void {
   const message: string = `${type} ${name} was successfully generated`;
   log(message);
   vscode.window.setStatusBarMessage(message, timeout);
+}
+
+export function displayNothingToGenerateMessage(templateType:string): void {
+  const message: string = `No templates for ${templateType}`;
+  log(message);
+  vscode.window.showInformationMessage(message);
 }
 
 export function displayNotGeneratedFilesMessage(files: string[]): void {
@@ -49,6 +56,7 @@ export function displayNotGeneratedFilesMessage(files: string[]): void {
   log(message);
   vscode.window.showInformationMessage(message);
 }
+
 export async function showFileNameDialog(
   templateType: TemplateType,
   clickedFolderPath?: string
@@ -100,11 +108,26 @@ export async function showFileNameDialog(
   }
   // const dirPath: string = path.join(rootPath, dirName);
 
+  let customType: string|undefined;
+  if(templateType === TemplateType.custom_type){
+    customType = await showCustomTypeDialog() ?? ''
+  }
+
   return {
     fullPath,
     fileName,
     // dirName,
     // dirPath,
     rootPath,
+    customType: customType ?? ''
   };
+}
+
+export async function showCustomTypeDialog(): Promise<string | undefined> {
+  const customType: string | undefined = await vscode.window.showInputBox({
+    prompt:
+      'Enter custom type or leave empty (must match a custom template in the template folder)',
+    value: '',
+  });
+  return customType;
 }

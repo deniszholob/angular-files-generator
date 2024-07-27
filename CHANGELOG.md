@@ -4,6 +4,7 @@
 
 ## [0.1.0]
 ### Added
+- Support for custom template types
 - util, model, enum templates/menu options
 ### Changed
 - Storybook template: Update types for latest SB and add some argType common boilerplate

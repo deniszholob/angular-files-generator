@@ -16,7 +16,7 @@ If you find the extension or the source code useful, consider:
 ## Features
 
 - Right click in the explorer  
-  ![UI](./screenshots/angular-files-generator-ui.png)
+  ![Menu](./screenshots/angular-files-generator-menu.png)
 - Select "Angular Generator"
 - Select what you want to generate
   - Component generates html, spec, stories and ts
@@ -52,18 +52,27 @@ Using the UI
 ## Custom Templates
 * Set the `customTemplateFolder` config to your custom template folder.
 * See the [default templates](https://github.com/deniszholob/angular-files-generator/tree/main/src/templates/standard) for reference.
-* File naming should be`__name__.KEYWORD.EXTENSION.mustache` where KEYWORD is one of component, module or service. EXTENSION should reflect the file type and subtype, such as `spec.ts` for typescript tests.
-* Additional files with `KEYWORD` will also be rendered.  
+* File naming should be`__name__.TEMPLATE_TYPE.EXTENSION.mustache` where TEMPLATE_TYPE is one of component, module or service. EXTENSION should reflect the file type and subtype, such as `spec.ts` for typescript tests.
+* Additional files with `TEMPLATE_TYPE` will also be rendered.  
   Example: `__name__.component.scss.mustache` does not have a default template, but will be rendered if included in the user's custom template folder.
 * [Available variables](./src/generator/TemplateVariables.model.ts) examples
   * `{{componentPrefix}}` - app
   * `{{dashCaseName}}` - new-module
+  * `{{camelCaseName}}` - newModule
   * `{{upperCamelCaseName}}` - NewModule
   * `{{constantCaseName}}` - NEW_MODULE
   * `{{upperReadableName}}` - New Module
+  * `{{type}}` - Custom type that was entered or blank/empty otherwise
 
 > **Note:** Overrides to `component.ts` and `module.ts` files will take precedence over internal extension templates and will yield in files in `StandaloneComponent` and `ModuleComponent`to be the same as the `Component` and `Module` Commands respectively, which may or may not matter...  
 > This should not be a problem unless using the override and creating a mix of new module and standalone components.
+
+## Custom Template Types
+* Define a custom template with a custom name such as `__name__TEMPLATE_TYPE.EXTENSION.mustache`
+* After right clicking, in the `Angular Generator` menu select `Custom`
+  * Type in a desired file `__name__`
+  * Then type in the matching `TEMPLATE_TYPE`
+  * `TEMPLATE_TYPE` can be left blank/empty to target `__name__.EXTENSION.mustache` or `__name__.mustache`
 
 ## Requirements
 
@@ -86,3 +95,6 @@ https://github.com/deniszholob/angular-files-generator/issues
 
 - [Github](https://github.com/deniszholob/angular-files-generator/releases)
 - [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=deniszholob.angular-files-generator)
+
+
+![Windows UI](./screenshots/angular-files-generator-ui.png)
