@@ -8,14 +8,14 @@ import {
   displayNotGeneratedFilesMessage,
   displaySuccessMessage,
   showFileNameDialog,
-} from './generator/editor';
+} from './editor';
 import {
   log,
   toConstantCaseName,
   toDashCaseName,
   toUpperCamelCaseName,
   toUpperReadableName,
-} from './generator/formatter';
+} from './util/formatter';
 import { generate } from './generator/generate-files';
 
 type RegisterCmdArgs = { fsPath: string };

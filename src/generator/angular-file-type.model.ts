@@ -7,6 +7,9 @@ export const NG_FILE_TYPE = {
   directive: 'directive',
   pipe: 'pipe',
   route: 'route',
+  util: 'util',
+  model: 'model',
+  enum: 'enum',
 } as const;
 
 export const NG_FILE_TYPES: NgFileType[] = Object.keys(

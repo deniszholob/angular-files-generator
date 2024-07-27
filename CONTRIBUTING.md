@@ -9,7 +9,7 @@
 ## Commit/Push/Publish
 * Commit as much as you like, but squash changes into 1 commit before a new release push
 * Make sure to update the following before pushing/publishing
-  * [package.json](./package.json) version number
+  * [package.json](./package.json) version number (major.minor.patch = breaking changes.new features.bug fixes)
   * [CHANGELOG](./CHANGELOG.md) version change description
 * Tag the commit to be the published release and push
 * [CI/CD](.github/workflows/main.yml) will automatically build and publish the extension from main branch

@@ -7,8 +7,8 @@ import {
   Templates,
   comparatorTemplateFile,
 } from './TemplateFolders.model';
-import { arrayUnionOverride } from './array-functions';
-import { log } from './formatter';
+import { arrayUnionOverride } from '../../util/array-functions';
+import { log } from '../../util/formatter';
 
 export function getExtensionTemplateDir(
   extensionSrcDir: string,

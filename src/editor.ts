@@ -6,13 +6,13 @@ import * as vscode from 'vscode';
 //   getAngularConfig,
 //   getAngularPrefix,
 // } from './angular-config';
-import { NgFileType } from './angular-file-type.model';
+import { NgFileType } from './generator/angular-file-type.model';
 import {
   arrayToStingList,
   log,
   toDashCaseName,
   toUpperReadableName,
-} from './formatter';
+} from './util/formatter';
 
 export interface GenerationPathInfo {
   /** Full file path

@@ -1,6 +1,7 @@
 // Settings
 // From package.json/contributes/configuration/properties
 import * as vscode from 'vscode';
+
 export const getSetting_customTemplateFolder = () =>
   getExtensionSetting<string | null | undefined>('customTemplateFolder');
 

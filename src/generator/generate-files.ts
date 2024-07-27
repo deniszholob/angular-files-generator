@@ -3,20 +3,20 @@ import Mustache = require('mustache');
 // import * as Mustache from 'mustache';
 import * as fs from 'fs';
 import * as path from 'path';
-import { TEMPLATES_FOLDERS, TemplateFile } from './TemplateFolders.model';
-import { TemplateVariables } from './TemplateVariables.model';
+import { TEMPLATES_FOLDERS, TemplateFile } from './template-ops/TemplateFolders.model';
+import { TemplateVariables } from './template-ops/TemplateVariables.model';
 import { NgFileType } from './angular-file-type.model';
-import { log } from './formatter';
+import { log } from '../util/formatter';
 import {
   getSetting_customTemplateFolder,
   getSetting_generateSpec,
   getSetting_generateStories,
-} from './settings';
+} from '../settings';
 import {
   getCustomTemplateDir,
   getExtensionTemplateDir,
   getTemplateFilesAndOverride,
-} from './template-ops';
+} from './template-ops/template-ops';
 
 export interface GeneratorVariables {
   /** Ex: c:/angular-files-generator/out */
@@ -41,15 +41,23 @@ export async function generate(
     generatorVariables.ngFileType
   );
   log('templates:', templates);
-  const outputPath: string = await genOutputDirIfDoesNotExist(
-    generatorVariables.outputDir,
-    templateVariables.dashCaseName
-  );
+
   const filteredTemplateFiles: TemplateFile[] = filterTemplates(
     templates,
     generatorVariables.ngFileType
   );
   log('filteredTemplateFiles:', filteredTemplateFiles);
+
+  // Add a folder to put generated templates into but not for all
+  // Some templates are just meant for single files like a model, other like components hav html, ts, spec, stories etc..
+  // e.g. clicked-dir/my-component/my-component.component.html
+  // e.g. clicked-dir/my-model.model.ts
+  const outputPath: string = await genOutputDirIfDoesNotExist(
+    generatorVariables.outputDir,
+    filteredTemplateFiles.length <=1
+      ? ''
+      : templateVariables.dashCaseName
+  );
 
   return await renderTemplates(
     outputPath,
