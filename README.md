@@ -6,6 +6,8 @@ Why use it? **Customization** to fit your needs!
 
 While the default ng or nx generator is great, this allows you to customize your new generated files to fit your workflow without having to delete or add repetitively to the generated files.
 
+Furthermore, with custom templates, you can use this with any other language!
+
 ## Support Me
 
 If you find the extension or the source code useful, consider:
@@ -22,7 +24,7 @@ If you find the extension or the source code useful, consider:
   - Component generates html, spec, stories and ts
   - Service generates ts and spec
   - Module Component generates module ts, spec and everything component does
-- Type in `dash-case` name  
+- Type in `dash-case` or `PascalCase` name  
   ![Name Input](./screenshots/angular-files-generator-input.png)
 - New files will be generated. You can right click into the folder to generate more. No files will be overridden.  
   ![Generated Files](./screenshots/angular-files-generator-result.png)
@@ -40,6 +42,7 @@ In `.vscode/settings.json` add in the following settings to customize the extens
   * 0: Disabled
   * 2: CSF2
   * 3: CSF3
+* `generateMock` - Generate mock data for services and models
 
 Using the json file  
 ```json
@@ -47,6 +50,7 @@ Using the json file
   "angular-files-generator.useOnlyCustomTemplates": false,
   "angular-files-generator.generateSpec": 1,
   "angular-files-generator.generateStories": 3,
+  "angular-files-generator.generateMock": true,
 ```
 Using the UI  
   ![UI](./screenshots/angular-files-generator-settings.png)
