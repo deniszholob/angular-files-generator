@@ -1,5 +1,24 @@
-import { {{upperCamelCaseName}} } from './{{dashCaseName}}.model.ts';
+// import { faker } from '@faker-js/faker';
 
+import { {{upperCamelCaseName}} } from './{{dashCaseName}}.model';
+
+// ===== Simple Mock ====== //
 export const MOCK_{{upperCamelCaseName}}: {{upperCamelCaseName}} = {
   id: 'string',
 };
+
+export const MOCK_{{upperCamelCaseName}}_Array: {{upperCamelCaseName}}[] = [MOCK_{{upperCamelCaseName}}];
+
+// ===== Advanced Mock with https://v9.fakerjs.dev/api/ ====== //
+// export function createMock_{{upperCamelCaseName}}(): {{upperCamelCaseName}} {
+//   return {
+//     id: faker.string.uuid(),
+//   };
+// }
+
+// export function createMock_{{upperCamelCaseName}}_Array(count: number): {{upperCamelCaseName}}[] {
+//   return faker.helpers.multiple(createMock_{{upperCamelCaseName}}, { count });
+// }
+
+// export const MOCK_{{upperCamelCaseName}}: {{upperCamelCaseName}} = createMock_{{upperCamelCaseName}}();
+// export const MOCK_{{upperCamelCaseName}}_Array: {{upperCamelCaseName}}[] = createMock_{{upperCamelCaseName}}_Array(5);

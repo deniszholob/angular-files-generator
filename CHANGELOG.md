@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+## [0.1.2]
+### Added
+- Model Mock Template: Add faker-js code
+
+### Changed
+- Component Template: Removed "standalone" from (newer version have that as default now)
+- Model Mock Template: Add array mock and removed ".ts" from import string
+- Spec toggle ignores the util and only applies to angular stuff (services components etc..)
+
+### Fixed
+- Enum template: Fox invalid console.log that was breaking the generation by default
+
 ## [0.1.1]
 ### Added
 - Add templates for mocks and data

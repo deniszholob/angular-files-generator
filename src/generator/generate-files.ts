@@ -184,8 +184,8 @@ function filterTemplates(
           .replace('__name__', '');
         const dotSplit: string[] = strippedName.split('.');
         return dotSplit.length > 2
-          ? dotSplit.at(1) == customType
-          : dotSplit.at(0) == customType;
+          ? dotSplit.at(1) === customType
+          : dotSplit.at(0) === customType;
       }
 
       if (templateType === TemplateType.module_component) {
@@ -205,7 +205,9 @@ function filterTemplates(
 
   if (!getSetting_generateSpec()) {
     filteredTemplateFiles = filteredTemplateFiles.filter(
-      (tf: TemplateFile): boolean => !tf.name.includes('.spec.ts')
+      // Don't generate spec unless its a util file
+      (tf: TemplateFile): boolean =>
+        !tf.name.includes('.spec.ts') || tf.name.includes('.util.')
     );
   }
 

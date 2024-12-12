@@ -8,10 +8,12 @@ export function is{{upperCamelCaseName}}(value: string): value is {{upperCamelCa
   return {{constantCaseName}}_OPTIONS.includes(value as {{upperCamelCaseName}});
 }
 
+// ====== Simple Enum Association: enum => string ===== //
 // export const {{constantCaseName}}_DISPLAY: Record<{{upperCamelCaseName}}, string> = {
 //   [{{upperCamelCaseName}}.option1]: 'Option 1',
 // };
 
+// ====== Advanced Enum Association: enum => object ===== //
 // export interface {{upperCamelCaseName}}Info {
 //   id: {{upperCamelCaseName}};
 //   display: string;
@@ -29,4 +31,6 @@ export function is{{upperCamelCaseName}}(value: string): value is {{upperCamelCa
 //     (o: {{upperCamelCaseName}}): {{upperCamelCaseName}}Info => {{constantCaseName}}_INFO[o],
 //   );
 
-// console.log({{{constantCaseName}}_OPTIONS, {{constantCaseName}}_DISPLAY, {{constantCaseName}}_INFO}, {{constantCaseName}}_INFO_OPTIONS);
+
+// ====== Visualize Data ===== //
+// console.log({ {{constantCaseName}}_OPTIONS, {{constantCaseName}}_DISPLAY, {{constantCaseName}}_INFO, {{constantCaseName}}_INFO_OPTIONS });
