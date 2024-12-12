@@ -1,9 +1,10 @@
+// @ref https://storybook.js.org/docs/writing-stories
 import { Meta, StoryObj } from '@storybook/angular';
 import { StoryFnAngularReturnType } from '@storybook/angular/dist/client/types';
 
 import { {{upperCamelCaseName}}Component } from './{{dashCaseName}}.component';
 
-type ComponentWithCustomControls = {{upperCamelCaseName}}Component & {};
+type ComponentWithCustomControls = {{upperCamelCaseName}}Component; // & {};
 
 const meta: Meta<ComponentWithCustomControls> = {
   // TODO: Make sure this title path is correct, uncomment tile, then remove this comment. OR remove both comment and title
@@ -29,6 +30,6 @@ const meta: Meta<ComponentWithCustomControls> = {
 export default meta;
 
 export const {{upperCamelCaseName}}: StoryObj<ComponentWithCustomControls> = {
-  args: {}, // Overrides args from default
   render: (args): StoryFnAngularReturnType => ({ props: args }),
+  // play: async ({ canvasElement }) => { const canvasElement = within(canvasElement) },
 }

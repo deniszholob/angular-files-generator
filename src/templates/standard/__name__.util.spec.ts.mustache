@@ -1,9 +1,12 @@
-import { myUtilFunction } from './{{dashCaseName}}.util';
+import { {{camelCaseName}} } from './{{dashCaseName}}.util';
 
-describe('{{dashCaseName}}', () => {
-  describe('myUtilFunction', () => {
-    it('should test myUtilFunction', () => {
-      expect(myUtilFunction).toBeDefined();
+// File Level Tests
+describe('{{upperReadableName}} Utilities', () => {
+  // Function level tests
+  describe('{{camelCaseName}}', () => {
+    // Test case 1
+    it('should test {{camelCaseName}}', () => {
+      expect({{camelCaseName}}).toBeDefined();
     });
   });
 });

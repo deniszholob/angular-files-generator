@@ -1,6 +1,6 @@
 import { Directive } from '@angular/core';
 
-@Directive({ selector: '[{{componentPrefix}}{{upperCamelCaseName}}]' })
+@Directive({ selector: '[{{componentPrefix}}{{upperCamelCaseName}}]', standalone: true })
 export class {{upperCamelCaseName}}Directive {
   constructor() { }
 }

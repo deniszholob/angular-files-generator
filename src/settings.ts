@@ -14,6 +14,9 @@ export const getSetting_generateSpec = () =>
 export const getSetting_generateStories = () =>
   getExtensionSetting<number | undefined>('generateStories');
 
+export const getSetting_generateMock = () =>
+  getExtensionSetting<boolean | undefined>('generateMock');
+
 function getExtensionSetting<T>(settingKey: string): T | undefined {
   return getExtensionSettings().get(settingKey);
 }

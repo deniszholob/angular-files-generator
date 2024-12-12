@@ -2,6 +2,22 @@
 
 ## [Unreleased]
 
+## [0.1.1]
+### Added
+- Add templates for mocks and data
+- Add mock data setting
+- Add data option
+- Add support for PascalCase and camelCase names
+
+### Changed
+- Directive Template: Added Standalone flag
+- Pipe Template: Added Standalone flag and removed [] from name
+- Enum Template: Added data mapping
+- Util/Util Spec Templates: Uses camelCase name for function itself
+
+### Fixed
+- ComponentWithCustomControls with & {} was not doing type checking anymore
+
 ## [0.1.0]
 ### Added
 - Support for custom template types

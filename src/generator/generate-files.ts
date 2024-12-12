@@ -12,6 +12,7 @@ import { TemplateType } from './template-type.enum';
 import { log } from '../util/formatter.util';
 import {
   getSetting_customTemplateFolder,
+  getSetting_generateMock,
   getSetting_generateSpec,
   getSetting_generateStories,
   getSetting_useOnlyCustomTemplates,
@@ -213,6 +214,13 @@ function filterTemplates(
       (tf: TemplateFile): boolean => !tf.name.includes('.stories.ts')
     );
   }
+
+  if (!getSetting_generateMock()) {
+    filteredTemplateFiles = filteredTemplateFiles.filter(
+      (tf: TemplateFile): boolean => !tf.name.includes('.mock.ts')
+    );
+  }
+
   return filteredTemplateFiles;
 }
 

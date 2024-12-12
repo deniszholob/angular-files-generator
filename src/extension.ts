@@ -14,6 +14,7 @@ import {
   showFileNameDialog,
 } from './editor';
 import {
+  camelCaseToDashCase,
   log,
   toCamelCase,
   toConstantCaseName,
@@ -72,7 +73,8 @@ async function generationCommand(
   log('Paths', paths);
 
   const prefix: string | undefined = await getAngularProjectPrefix();
-  const dashCaseName: string = toDashCaseName(paths.fileName);
+  const preppedDashCase: string = camelCaseToDashCase(paths.fileName);
+  const dashCaseName: string = toDashCaseName(preppedDashCase);
   await generate(
     {
       componentPrefix: prefix ?? DEFAULT_ANGULAR_PREFIX,

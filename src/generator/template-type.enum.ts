@@ -10,6 +10,7 @@ export enum TemplateType {
   route = 'route',
   util = 'util',
   model = 'model',
+  data = 'data',
   enum = 'enum',
 }
 

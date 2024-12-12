@@ -61,6 +61,6 @@ async function getTemplates(
 /** Object conversion */
 function templatesToTemplateFiles(templates: Templates): TemplateFile[] {
   return templates.templateFiles.map(
-    (f) => new TemplateFile(f, templates.templatesPath)
+    (f: string): TemplateFile => new TemplateFile(f, templates.templatesPath)
   );
 }

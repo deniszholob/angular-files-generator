@@ -86,8 +86,14 @@ export async function showFileNameDialog(
 
   const fileTypeDashed: string = toDashCaseName(templateType);
   let fileName: string | undefined = await vscode.window.showInputBox({
-    prompt: `Type the name of the new ${toUpperReadableName(fileTypeDashed)}`,
-    value: `my-${fileTypeDashed}-name`,
+    prompt: `Type the name of the new ${
+      templateType === TemplateType.custom_type
+        ? ' custom file'
+        : toUpperReadableName(fileTypeDashed)
+    }`,
+    value: `my-${
+      templateType === TemplateType.custom_type ? 'file' : fileTypeDashed
+    }-name`,
   });
 
   if (!fileName) {

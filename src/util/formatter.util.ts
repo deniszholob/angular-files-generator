@@ -21,6 +21,14 @@ export function arrayToStingList({
     : '';
 }
 
+/** MyWonderfulComponent => my-wonderful-component */
+export function camelCaseToDashCase(input: string): string {
+  return input
+    .replace(/([a-z])([A-Z])/g, '$1-$2') // Insert a dash between lowercase and uppercase letters
+    .replace(/([A-Z])([A-Z][a-z])/g, '$1-$2') // Handle multiple uppercase letters
+    .toLowerCase();
+}
+
 /** Ex: My wonderful component */
 export function toTitleCase(input: string): string {
   return input.charAt(0).toUpperCase() + input.slice(1).toLowerCase();

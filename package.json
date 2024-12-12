@@ -12,7 +12,7 @@
     "url": "https://github.com/deniszholob/angular-files-generator/issues"
   },
   "icon": "images/icon-96x96.png",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "GPL-3",
   "engines": {
     "node": ">=18.12.1",
@@ -88,6 +88,11 @@
             "Generate [CSF](https://storybook.js.org/blog/storybook-csf3-is-here/) version 3"
           ],
           "description": "Toggle generation of stories files."
+        },
+        "angular-files-generator.generateMock": {
+          "type": "boolean",
+          "default": true,
+          "description": "Toggle generation of mock files."
         }
       }
     },
@@ -144,6 +149,10 @@
           "group": "generate4@3"
         },
         {
+          "command": "angular-files-generator.generateData",
+          "group": "generate4@4"
+        },
+        {
           "command": "angular-files-generator.generateCustomType",
           "group": "generate5@1"
         }
@@ -190,7 +199,7 @@
       },
       {
         "command": "angular-files-generator.generateUtil",
-        "title": "Generate Utility"
+        "title": "Generate Utility Fn"
       },
       {
         "command": "angular-files-generator.generateModel",
@@ -199,6 +208,10 @@
       {
         "command": "angular-files-generator.generateEnum",
         "title": "Generate Enum"
+      },
+      {
+        "command": "angular-files-generator.generateData",
+        "title": "Generate Data"
       },
       {
         "command": "angular-files-generator.generateCustomType",
@@ -222,6 +235,7 @@
     "onCommand:angular-files-generator.generateUtil",
     "onCommand:angular-files-generator.generateModel",
     "onCommand:angular-files-generator.generateEnum",
+    "onCommand:angular-files-generator.generateData",
     "onCommand:angular-files-generator.generateCustomType",
     "onCommand:angular-files-generator.test"
   ],
